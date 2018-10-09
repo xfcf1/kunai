@@ -1,0 +1,29 @@
+{
+  "engineVersion": "5.2.10",
+  "compilerVersion": "5.2.10",
+  "template": {},
+  "target": {
+    "current": "web"
+  },
+  "modules": [
+    {
+      "name": "egret"
+    },
+    {
+      "name": "eui"
+    },
+    {
+      "name": "assetsmanager"
+    },
+    {
+      "name": "tween"
+    },
+    {
+      "name": "promise"
+    },
+    {
+      "name": "egretad",
+      "path": "./libs/egretad"
+    }
+  ]
+}
