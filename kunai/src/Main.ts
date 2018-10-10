@@ -149,10 +149,9 @@ class Main extends eui.UILayer {
 	 * Description file loading is successful, start to play the animation
 	 */
   private startAnimation(): void {
-    const rotation = 3
     setInterval(() => {
-      this.timber.rotation += rotation
-    }, this.rate)
+      this.timber.rotation += this.rotations
+    }, this.rate - this.level)
   }
 
 	/**
@@ -164,9 +163,6 @@ class Main extends eui.UILayer {
     this.isShooting = true
     this.kunaiNum -= 1
     this.updateKunaiNum()
-    if (this.kunaiNum <= 0 && this.level < 10) {
-      this.showNext()
-    }
     const func = ():void => {
       if (this.calcCollision(this.timber.rotation)) {
         // 如坐标集合里面有了，苦无插入重复的位置，弹飞新加的苦无
@@ -175,6 +171,11 @@ class Main extends eui.UILayer {
         console.log('重复苦无', this.insertRotate, this.timber.rotation)
       } else {
         this.createRotateKunai(this.timber.rotation)
+
+        // 判断及动画完成以后进行游戏判断
+        if (this.kunaiNum <= 0 && this.level < 10) {
+          this.showNext()
+        }
       }
     }
     egret.Tween.get(this.kunai)
@@ -223,16 +224,18 @@ class Main extends eui.UILayer {
     kunai.width = this.kunaiW
     kunai.height = this.kunaiH
     if (isFoucs) {
-      kunai.rotation = rotate
+      kunai.rotation = rotate - this.timber.rotation
     }
     this.addChildAt(kunai, 1)
     setInterval(() => {
       kunai.rotation += this.rotations
-    }, this.rate)
+    }, this.rate - this.level)
 
     const obj = {id: rotate, range, kunai}
     this.insertRotate.push(obj)
     this.resetKunai()
+
+    console.log('所有的苦无', this.insertRotate, rotate)
   }
 
   private calcCollision = (rotate: number):boolean => {
@@ -246,7 +249,7 @@ class Main extends eui.UILayer {
     const func = ():void => {
       setTimeout(() => {
         this.gameover()
-      }, 1000)
+      }, 500)
     }
 
     egret.Tween.get(this.kunai)
@@ -330,8 +333,9 @@ class Main extends eui.UILayer {
     this.updateKunaiNum()
     this.updateLevel()
     this.cleanBitmap()
+    // 每加一关，已插入的苦无多一把
     for (let i = 0; i < this.level; i++) {
-      let random = Math.floor(Math.random() * 180)
+      let random = Math.floor(Math.random() * 30)
       random = Math.random() < .5 ? random * -1 : random
       this.createRotateKunai(random, true)
     }
