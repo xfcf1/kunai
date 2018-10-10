@@ -36,11 +36,11 @@ class Main extends eui.UILayer {
     })
 
     egret.lifecycle.onPause = () => {
-      // egret.ticker.pause();
+      egret.ticker.pause();
     }
 
     egret.lifecycle.onResume = () => {
-      // egret.ticker.resume();
+      egret.ticker.resume();
     }
 
     //inject the custom material parser
@@ -97,6 +97,16 @@ class Main extends eui.UILayer {
   private kunai: egret.Bitmap
   private rotations: number = 3
   private isShooting: boolean = false
+  private insertRotate: itemObj[] = []
+  protected kunaiW = 21
+  protected kunaiH = 100
+  protected rate = 40
+  
+  // 关数限定
+  private kunaiNum:number = 9
+  private level:number = 1
+  private kunaiNumTips: egret.TextField
+
 	/**
 	 * 创建场景界面
 	 * Create scene interface
@@ -120,26 +130,9 @@ class Main extends eui.UILayer {
     this.timber.x = stageW/2
     this.timber.y = 200
 
-    // this.kunai = this.createBitmapByName('kunai_png')
-    // this.addChild(this.kunai)
-    // this.kunai.width = 20
-    // this.kunai.height = 100
-    // this.kunai.anchorOffsetX = 10
-    // this.kunai.anchorOffsetY = -80
-    // this.kunai.x = stageW/2
-    // this.kunai.y = 200
-
-    this.stage.addEventListener(egret.TouchEvent.TOUCH_TAP, this.shoot, this)
-
-    this.textfield = new egret.TextField()
-    this.addChild(this.textfield)
-    this.textfield.x = 25
-    this.textfield.y = 25
-    this.textfield.textColor = 0x000000
-    this.textfield.textAlign = egret.HorizontalAlign.LEFT
-    this.textfield.size = 14
-
+    this.createText()
     this.createKunai()
+    this.createKunaiNum()
   }
 	/**
 	 * 根据name关键字创建一个Bitmap对象。name属性请参考resources/resource.json配置文件的内容。
@@ -159,8 +152,7 @@ class Main extends eui.UILayer {
     const rotation = 3
     setInterval(() => {
       this.timber.rotation += rotation
-      this.textfield.text = `角度：${this.timber.rotation}`
-    }, 50)
+    }, this.rate)
   }
 
 	/**
@@ -168,15 +160,25 @@ class Main extends eui.UILayer {
 	 * Click the button
 	 */
   private shoot(e: egret.TouchEvent) {
-    if (this.isShooting) return
+    if (this.isShooting || this.kunaiNum <= 0) return
     this.isShooting = true
+    this.kunaiNum -= 1
+    this.updateKunaiNum()
+    if (this.kunaiNum <= 0 && this.level < 10) {
+      this.showNext()
+    }
     const func = ():void => {
-      this.createRotateKunai()
-      this.resetKunai()
-      this.isShooting = false
+      if (this.calcCollision(this.timber.rotation)) {
+        // 如坐标集合里面有了，苦无插入重复的位置，弹飞新加的苦无
+        this.flickKunai()
+
+        console.log('重复苦无', this.insertRotate, this.timber.rotation)
+      } else {
+        this.createRotateKunai(this.timber.rotation)
+      }
     }
     egret.Tween.get(this.kunai)
-      .to({ y: 280 }, 300, egret.Ease.cubicIn)
+      .to({ y: 370 }, 150, egret.Ease.cubicIn)
       .call(func, this)
   }
 
@@ -185,10 +187,13 @@ class Main extends eui.UILayer {
     this.addChild(this.kunai)
     const stageW = this.stage.stageWidth
     const stageH = this.stage.stageHeight
-    this.kunai.width = 20
-    this.kunai.height = 100
+    this.kunai.width = this.kunaiW
+    this.kunai.height = this.kunaiH
     this.kunai.x = stageW/2 - 10
     this.kunai.y = stageH - 200
+
+    this.kunai.touchEnabled = true
+    this.kunai.addEventListener(egret.TouchEvent.TOUCH_TAP, this.shoot, this)
   }
 
   private resetKunai() {
@@ -196,21 +201,171 @@ class Main extends eui.UILayer {
     const stageH = this.stage.stageHeight
     this.kunai.width = 20
     this.kunai.height = 100
+    this.kunai.rotation = 0
     this.kunai.x = stageW/2 - 10
     this.kunai.y = stageH - 200
+
+    this.isShooting = false
   }
 
-  private createRotateKunai(){
+  private createRotateKunai(rotate: number, isFoucs?: boolean){
+    // 数据存储木桩上的苦无坐标
+    const range = []
+    range.push(rotate - 10)
+    range.push(rotate + 10)
+
+    // 生成木桩上的苦无
     const kunai:egret.Bitmap = this.createBitmapByName('kunai_png')
     kunai.anchorOffsetX = 10
     kunai.anchorOffsetY = -80
     kunai.x = this.stage.stageWidth/2
     kunai.y = 200
-    kunai.width = 20
-    kunai.height = 100
+    kunai.width = this.kunaiW
+    kunai.height = this.kunaiH
+    if (isFoucs) {
+      kunai.rotation = rotate
+    }
     this.addChildAt(kunai, 1)
     setInterval(() => {
       kunai.rotation += this.rotations
-    }, 50)
+    }, this.rate)
+
+    const obj = {id: rotate, range, kunai}
+    this.insertRotate.push(obj)
+    this.resetKunai()
   }
+
+  private calcCollision = (rotate: number):boolean => {
+    const { insertRotate } = this
+    return insertRotate.some((item:itemObj):boolean => {
+      return (rotate <= item.range[1] && rotate >= item.range[0])
+    })
+  }
+
+  private flickKunai(){
+    const func = ():void => {
+      setTimeout(() => {
+        this.gameover()
+      }, 1000)
+    }
+
+    egret.Tween.get(this.kunai)
+      .to({ x:this.stage.stageWidth + 100, y: this.stage.$stageHeight + 100, rotation: 720 }, 700, egret.Ease.bounceOut)
+      .call(func, this)
+  }
+
+  // 文字提示
+  private createText() {
+    const tips = new egret.TextField()
+    this.addChild(tips)
+    tips.x = 10
+    tips.y = 30
+    tips.textColor = 0x000000
+    tips.textAlign = egret.HorizontalAlign.CENTER
+    tips.size = 10
+    tips.text = '所有苦无全部射中即可过关'
+
+    const kunaiTips = new egret.TextField()
+    this.addChild(kunaiTips)
+    kunaiTips.x = this.stage.stageWidth - 120
+    kunaiTips.y = this.stage.stageHeight - 60
+    kunaiTips.textColor = 0x000000
+    kunaiTips.textAlign = egret.HorizontalAlign.CENTER
+    kunaiTips.size = 10
+    kunaiTips.text = '点击苦无即可发射'
+
+    this.textfield = new egret.TextField()
+    this.addChild(this.textfield)
+    this.textfield.x = 10
+    this.textfield.y = 10
+    this.textfield.textColor = 0x000000
+    this.textfield.textAlign = egret.HorizontalAlign.CENTER
+    this.textfield.size = 16
+    this.textfield.text = `第 ${this.level} 关`
+  }
+
+  // 关数显示
+  private updateLevel() {
+    this.textfield.text = `第 ${this.level} 关`
+  }
+
+  // 绘制剩余苦无
+  private createKunaiNum() {
+    const kunai = this.createBitmapByName('kunai_png')
+    kunai.width = 10
+    kunai.height = 50
+    kunai.x = 30
+    kunai.y = this.stage.stageHeight - 100
+    this.addChild(kunai)
+
+    this.kunaiNumTips = new egret.TextField()
+    this.addChild(this.kunaiNumTips)
+    this.kunaiNumTips.x = 50
+    this.kunaiNumTips.y = this.stage.stageHeight - 80
+    this.kunaiNumTips.textColor = 0xFFFFFF
+    this.kunaiNumTips.textAlign = egret.HorizontalAlign.LEFT
+    this.kunaiNumTips.size = 14
+    this.kunaiNumTips.text = `x ${this.kunaiNum}`
+  }
+
+  // 更新剩余苦无
+  private updateKunaiNum() {
+    this.kunaiNumTips.text = `x ${this.kunaiNum}`
+  }
+
+  // 下一关
+  private showNext() {
+    const panel = new eui.Panel()
+    panel.title = '恭喜过关，点击进入下一关'
+    panel.width = 300
+    panel.x = this.stage.stageWidth/2 - 150
+    panel.verticalCenter = 0
+    panel.addEventListener(eui.UIEvent.CLOSING, this.goNext, this)
+    this.addChild(panel)
+  }
+
+  private goNext() {
+    this.level += 1
+    this.kunaiNum = 9
+    this.updateKunaiNum()
+    this.updateLevel()
+    this.cleanBitmap()
+    for (let i = 0; i < this.level; i++) {
+      let random = Math.floor(Math.random() * 180)
+      random = Math.random() < .5 ? random * -1 : random
+      this.createRotateKunai(random, true)
+    }
+  }
+
+  private gameover() {
+    const panel = new eui.Panel()
+    panel.title = '游戏失败，重新开始'
+    panel.width = 300
+    panel.x = this.stage.stageWidth/2 - 150
+    panel.verticalCenter = 0
+    panel.addEventListener(eui.UIEvent.CLOSING, this.resetGame, this)
+    this.addChild(panel)
+  }
+
+  private resetGame() {
+    this.level = 1
+    this.kunaiNum = 9
+    this.updateKunaiNum()
+    this.updateLevel()
+    this.cleanBitmap()
+    this.resetKunai()
+  }
+
+  private cleanBitmap() {
+    this.insertRotate.forEach((item: itemObj) => {
+      item.kunai.parent.removeChild(item.kunai)
+    })
+    this.insertRotate = []
+  }
+}
+
+interface itemObj {
+  id: number
+  range: number[]
+  kunai: egret.Bitmap
 }
