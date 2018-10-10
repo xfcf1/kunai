@@ -335,7 +335,7 @@ class Main extends eui.UILayer {
     this.cleanBitmap()
     // 每加一关，已插入的苦无多一把
     for (let i = 0; i < this.level; i++) {
-      let random = Math.floor(Math.random() * 30)
+      let random = Math.floor(Math.random() * 180)
       random = Math.random() < .5 ? random * -1 : random
       this.createRotateKunai(random, true)
     }
