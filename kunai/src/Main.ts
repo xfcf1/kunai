@@ -151,7 +151,7 @@ class Main extends eui.UILayer {
   private startAnimation(): void {
     setInterval(() => {
       this.timber.rotation += this.rotations
-    }, this.rate - this.level)
+    }, this.rate)
   }
 
 	/**
@@ -170,7 +170,7 @@ class Main extends eui.UILayer {
 
         console.log('重复苦无', this.insertRotate, this.timber.rotation)
       } else {
-        this.createRotateKunai(this.timber.rotation)
+        this.createRotateKunai()
 
         // 判断及动画完成以后进行游戏判断
         if (this.kunaiNum <= 0 && this.level < 10) {
@@ -209,8 +209,9 @@ class Main extends eui.UILayer {
     this.isShooting = false
   }
 
-  private createRotateKunai(rotate: number, isFoucs?: boolean){
+  private createRotateKunai(){
     // 数据存储木桩上的苦无坐标
+    const rotate = this.timber.rotation
     const range = []
     range.push(rotate - 10)
     range.push(rotate + 10)
@@ -223,13 +224,13 @@ class Main extends eui.UILayer {
     kunai.y = 200
     kunai.width = this.kunaiW
     kunai.height = this.kunaiH
-    if (isFoucs) {
-      kunai.rotation = rotate - this.timber.rotation
-    }
+    // if (isFoucs) {
+    //   kunai.rotation = rotate - this.timber.rotation
+    // }
     this.addChildAt(kunai, 1)
     setInterval(() => {
       kunai.rotation += this.rotations
-    }, this.rate - this.level)
+    }, this.rate)
 
     const obj = {id: rotate, range, kunai}
     this.insertRotate.push(obj)
@@ -335,9 +336,13 @@ class Main extends eui.UILayer {
     this.cleanBitmap()
     // 每加一关，已插入的苦无多一把
     for (let i = 0; i < this.level; i++) {
-      let random = Math.floor(Math.random() * 180)
-      random = Math.random() < .5 ? random * -1 : random
-      this.createRotateKunai(random, true)
+      // let random = Math.floor(Math.random() * 180)
+      // random = Math.random() < .5 ? random * -1 : random
+      // this.createRotateKunai(random, true)
+      const random = Math.floor(Math.random() * 100)
+      setTimeout(() => {
+        this.createRotateKunai()
+      }, this.rate * random)
     }
   }
 
