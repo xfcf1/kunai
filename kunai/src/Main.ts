@@ -175,6 +175,8 @@ class Main extends eui.UILayer {
 
         console.log('重复苦无', this.insertRotate, this.timber.rotation)
       } else {
+        // 木屑
+        this.woodBits()
         // 木桩被射中动画
         const timberX = this.timber.x
         const timberY = this.timber.y
@@ -403,6 +405,26 @@ class Main extends eui.UILayer {
       item.kunai.parent.removeChild(item.kunai)
     })
     this.insertRotate = []
+  }
+
+  // 木屑
+  private woodBits() {
+    const { stageWidth, stageHeight } = this.stage
+    for (let i = 0; i < 4; i++) {
+      const dou = this.createBitmapByName('dou_png')
+      dou.width = 5
+      dou.height = 5
+      dou.x = stageWidth / 2 - 1
+      dou.y = 290
+      this.addChild(dou)
+      let random = Math.floor(Math.random() * stageWidth * 2)
+      random = Math.random() < .5 ? random * -1 : random
+      egret.Tween.get(dou)
+        .to({ x: random, y: stageHeight }, 500, egret.Ease.sineOut)
+        .call(() => {
+          this.removeChild(dou)
+        })
+    }
   }
 }
 
