@@ -341,8 +341,9 @@ class Main extends eui.UILayer {
     const panel = new eui.Panel()
     panel.title = '恭喜过关，点击进入下一关'
     panel.width = 300
+    panel.height = 230
     panel.x = this.stage.stageWidth/2 - 150
-    panel.verticalCenter = 0
+    panel.y = this.stage.stageHeight -320
     panel.addEventListener(eui.UIEvent.CLOSING, this.goNext, this)
     this.addChild(panel)
   }
@@ -369,8 +370,9 @@ class Main extends eui.UILayer {
     const panel = new eui.Panel()
     panel.title = '游戏失败，重新开始'
     panel.width = 300
+    panel.height = 230
     panel.x = this.stage.stageWidth/2 - 150
-    panel.verticalCenter = 0
+    panel.y = this.stage.stageHeight -320
     panel.addEventListener(eui.UIEvent.CLOSING, this.resetGame, this)
     this.addChild(panel)
   }
