@@ -361,7 +361,7 @@ class Main extends eui.UILayer {
   // 随机生成的苦无
   private createRandomKunai() {
     // 每加一关，已插入的苦无多一把
-    for (let i = 0; i < this.level; i++) {
+    for (let i = 1; i < this.level; i++) {
       // let random = Math.floor(Math.random() * 180)
       // random = Math.random() < .5 ? random * -1 : random
       // this.createRotateKunai(random, true)
@@ -390,6 +390,7 @@ class Main extends eui.UILayer {
     this.updateLevel()
     this.cleanBitmap()
     this.resetKunai()
+    this.createRandomKunai()
   }
 
   private cleanBitmap() {
