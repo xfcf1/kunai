@@ -100,7 +100,7 @@ class Main extends eui.UILayer {
   private insertRotate: itemObj[] = []
   protected kunaiW = 21
   protected kunaiH = 100
-  protected rate = 40
+  protected rate = 35
   
   // 关数限定
   private kunaiNum:number = 9
@@ -213,6 +213,7 @@ class Main extends eui.UILayer {
     this.kunai.x = stageW/2 - 10
     this.kunai.y = stageH - 200
     
+    this.createRandomKunai()
     this.createClickable()
   }
 
@@ -354,6 +355,11 @@ class Main extends eui.UILayer {
     this.updateKunaiNum()
     this.updateLevel()
     this.cleanBitmap()
+    this.createRandomKunai()
+  }
+
+  // 随机生成的苦无
+  private createRandomKunai() {
     // 每加一关，已插入的苦无多一把
     for (let i = 0; i < this.level; i++) {
       // let random = Math.floor(Math.random() * 180)
