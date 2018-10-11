@@ -170,10 +170,17 @@ class Main extends eui.UILayer {
 
         console.log('重复苦无', this.insertRotate, this.timber.rotation)
       } else {
+        // 木桩被射中动画
+        const timberX = this.timber.x
+        const timberY = this.timber.y
+        egret.Tween.get(this.timber)
+        .to({x: this.timber.x - 6, y: this.timber.y - 7}, 20, egret.Ease.bounceInOut)
+        .to({x: timberX, y: timberY}, 20, egret.Ease.bounceInOut)
+
         this.createRotateKunai()
 
         // 判断及动画完成以后进行游戏判断
-        if (this.kunaiNum <= 0 && this.level < 10) {
+        if (this.kunaiNum <= 0) {
           this.showNext()
         }
       }
@@ -181,6 +188,19 @@ class Main extends eui.UILayer {
     egret.Tween.get(this.kunai)
       .to({ y: 370 }, 150, egret.Ease.cubicIn)
       .call(func, this)
+  }
+
+  // 创建游戏点击区域
+
+  private createClickable() {
+    const { stage } = this
+    const rect = new egret.Shape()
+    rect.graphics.beginFill(0x000000, 0)
+    rect.graphics.drawRect(0, stage.stageHeight-200, stage.stageWidth ,300)
+    rect.graphics.endFill()
+    this.addChild(rect)
+    rect.touchEnabled = true
+    rect.addEventListener(egret.TouchEvent.TOUCH_TAP, this.shoot, this)
   }
 
   private createKunai() {
@@ -192,9 +212,8 @@ class Main extends eui.UILayer {
     this.kunai.height = this.kunaiH
     this.kunai.x = stageW/2 - 10
     this.kunai.y = stageH - 200
-
-    this.kunai.touchEnabled = true
-    this.kunai.addEventListener(egret.TouchEvent.TOUCH_TAP, this.shoot, this)
+    
+    this.createClickable()
   }
 
   private resetKunai() {
