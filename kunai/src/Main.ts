@@ -156,7 +156,6 @@ class Main extends eui.UILayer {
     this.timber.rotation = 0
     this.timberInterval = setInterval(() => {
       this.timber.rotation += this.rotations
-      this.textfield.text = `${this.timber.rotation}`
     }, this.rate)
   }
 
