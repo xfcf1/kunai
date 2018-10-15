@@ -13,6 +13,16 @@ class GamePlayingPanel extends egret.Sprite {
     // endBtn.touchEnabled = true
     // endBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, onTouchTap, this)
 
+    const { stage } = this
+    const img = new egret.Bitmap()
+    img.texture = RES.getRes('4_jpg')
+    img.x = 0
+    img.y = 0
+    img.width = stage.stageWidth
+    img.height = stage.stageHeight
+    img.alpha = .4
+    this.addChild(img)
+
     this.initGame()
   }
 
@@ -175,7 +185,6 @@ class GamePlayingPanel extends egret.Sprite {
   }
 
   private createRotateKunai(kunaiRotate?: number) {
-    console.log(this.numChildren)
     // 数据存储木桩上的苦无坐标
     // 有kunaiRotate则是随机生成的苦无
     // 如果是用kunaiRotate做判断需要乘以-1
@@ -193,7 +202,7 @@ class GamePlayingPanel extends egret.Sprite {
     kunai.width = this.kunaiW
     kunai.height = this.kunaiH
     kunai.rotation = kunaiRotate ? kunaiRotate : 0
-    this.addChildAt(kunai, 0)
+    this.addChildAt(kunai, 1)
     setInterval(() => {
       kunai.rotation += this.rotations
     }, this.rate)
@@ -224,14 +233,35 @@ class GamePlayingPanel extends egret.Sprite {
 
   // 文字提示
   private createText() {
+    const shape1 = new egret.Shape()
+    shape1.graphics.beginFill(0x2f1810, .8)
+    shape1.graphics.drawRoundRect(-10, 10, 80, 30, 10)
+    shape1.graphics.endFill()
+    this.addChild(shape1)
+
+    this.textfield = new egret.TextField()
+    this.addChild(this.textfield)
+    this.textfield.x = 12
+    this.textfield.y = 17
+    this.textfield.textColor = 0xffffff
+    this.textfield.textAlign = egret.HorizontalAlign.CENTER
+    this.textfield.size = 14
+    this.updateLevel()
+
+    // const shape2 = new egret.Shape()
+    // shape2.graphics.beginFill(0x2f1810, 5)
+    // shape2.graphics.drawRoundRect(-10, 10, 100, 50, 5)
+    // shape2.graphics.endFill()
+    // this.addChild(shape2)
+
     const tips = new egret.TextField()
     this.addChild(tips)
     tips.x = 10
-    tips.y = 30
+    tips.y = 50
     tips.textColor = 0x000000
     tips.textAlign = egret.HorizontalAlign.CENTER
     tips.size = 10
-    tips.text = '所有苦无全部射中即可过关'
+    tips.text = '射中全部苦无过关'
 
     const kunaiTips = new egret.TextField()
     this.addChild(kunaiTips)
@@ -242,14 +272,6 @@ class GamePlayingPanel extends egret.Sprite {
     kunaiTips.size = 10
     kunaiTips.text = '点击苦无即可发射'
 
-    this.textfield = new egret.TextField()
-    this.addChild(this.textfield)
-    this.textfield.x = 10
-    this.textfield.y = 10
-    this.textfield.textColor = 0x000000
-    this.textfield.textAlign = egret.HorizontalAlign.CENTER
-    this.textfield.size = 16
-    this.updateLevel()
   }
 
   // 关数显示
@@ -283,14 +305,15 @@ class GamePlayingPanel extends egret.Sprite {
 
   // 下一关
   private showNext() {
-    const panel = new eui.Panel()
-    panel.title = '恭喜过关，点击进入下一关'
-    panel.width = 300
-    panel.height = 230
-    panel.x = this.stage.stageWidth / 2 - 150
-    panel.y = this.stage.stageHeight - 320
-    panel.addEventListener(eui.UIEvent.CLOSING, this.goNext, this)
-    this.addChild(panel)
+    // const panel = new eui.Panel()
+    // panel.title = '恭喜过关，点击进入下一关'
+    // panel.width = 300
+    // panel.height = 230
+    // panel.x = this.stage.stageWidth / 2 - 150
+    // panel.y = this.stage.stageHeight - 320
+    // panel.addEventListener(eui.UIEvent.CLOSING, this.goNext, this)
+    // this.addChild(panel)
+    this.goNext()
   }
 
   private goNext() {
@@ -315,14 +338,70 @@ class GamePlayingPanel extends egret.Sprite {
   }
 
   private gameover() {
-    const panel = new eui.Panel()
-    panel.title = '游戏失败，重新开始'
-    panel.width = 300
-    panel.height = 230
-    panel.x = this.stage.stageWidth / 2 - 150
-    panel.y = this.stage.stageHeight - 320
-    panel.addEventListener(eui.UIEvent.CLOSING, this.resetGame, this)
-    this.addChild(panel)
+    // const panel = new eui.Panel()
+    // panel.title = '游戏失败，重新开始'
+    // panel.width = 300
+    // panel.height = 230
+    // panel.x = this.stage.stageWidth / 2 - 150
+    // panel.y = this.stage.stageHeight - 320
+    // panel.addEventListener(eui.UIEvent.CLOSING, this.resetGame, this)
+    // this.addChild(panel)
+    const { stage } = this
+    const mask: egret.Shape = new egret.Shape()
+    mask.graphics.beginFill(0x000000, .6)
+    mask.graphics.drawRoundRect(stage.stageWidth / 2 - 150, stage.stageHeight / 2 - 200, 300, 400, 10)
+    this.addChild(mask)
+
+    const tip: egret.TextField = new egret.TextField()
+    tip.x = stage.stageWidth / 2 - 30
+    tip.y = stage.stageHeight / 2 - 190
+    tip.text = '游戏失败'
+    tip.textColor = 0xffffff
+    tip.size = 18
+    this.addChild(tip)
+
+    const restartBtn: egret.Shape = new egret.Shape()
+    restartBtn.graphics.beginGradientFill(egret.GradientType.LINEAR, [0x15c30c, 0x82ee5b], [1, 1], [150, 220])
+    restartBtn.graphics.drawRoundRect(stage.stageWidth / 2 - 120, 440, 240, 40, 10)
+    this.addChild(restartBtn)
+    restartBtn.touchEnabled = true
+    restartBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.resetGame, this)
+
+    const restartTxt: egret.TextField = new egret.TextField
+    restartTxt.textColor = 0xffffff
+    restartTxt.size = 16
+    restartTxt.text = '重 新 开 始'
+    restartTxt.x = stage.stageWidth / 2 - 40
+    restartTxt.y = 455
+    this.addChild(restartTxt)
+
+    const shareBtn: egret.Shape = new egret.Shape()
+    shareBtn.graphics.beginGradientFill(egret.GradientType.LINEAR, [0x4292e9, 0x85bcf9], [1, 1], [150, 220])
+    shareBtn.graphics.drawRoundRect(stage.stageWidth / 2 - 120, 500, 110, 40, 10)
+    this.addChild(shareBtn)
+
+    const shareTxt: egret.TextField = new egret.TextField
+    shareTxt.textColor = 0xffffff
+    shareTxt.size = 16
+    shareTxt.text = '分享复活'
+    shareTxt.x = stage.stageWidth / 2 - 100
+    shareTxt.y = 515
+    this.addChild(shareTxt)
+
+
+    const adBtn: egret.Shape = new egret.Shape()
+    adBtn.graphics.beginGradientFill(egret.GradientType.LINEAR, [0xf1bf4e, 0xfcdb69], [1, 1], [150, 220])
+    adBtn.graphics.drawRoundRect(stage.stageWidth / 2 + 10, 500, 110, 40, 10)
+    this.addChild(adBtn)
+
+    const adTxt: egret.TextField = new egret.TextField
+    adTxt.textColor = 0xffffff
+    adTxt.size = 16
+    adTxt.text = '看广告复活'
+    adTxt.x = stage.stageWidth / 2 + 30
+    adTxt.y = 515
+    this.addChild(adTxt)
+
   }
 
   private resetGame() {

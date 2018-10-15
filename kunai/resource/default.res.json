@@ -1,7 +1,7 @@
 {
 	"groups": [
 		{
-			"keys": "checkbox_select_disabled_png,checkbox_select_down_png,checkbox_select_up_png,checkbox_unselect_png,selected_png,border_png,header_png,radiobutton_select_disabled_png,radiobutton_select_down_png,radiobutton_select_up_png,radiobutton_unselect_png,roundthumb_png,thumb_png,track_png,tracklight_png,handle_png,off_png,on_png,button_down_png,button_up_png,thumb_pb_png,track_pb_png,track_sb_png,bg_jpg,egret_icon_png,description_json,kunai_png,timber_png,dou_png",
+			"keys": "checkbox_select_disabled_png,checkbox_select_down_png,checkbox_select_up_png,checkbox_unselect_png,selected_png,border_png,header_png,radiobutton_select_disabled_png,radiobutton_select_down_png,radiobutton_select_up_png,radiobutton_unselect_png,roundthumb_png,thumb_png,track_png,tracklight_png,handle_png,off_png,on_png,button_down_png,button_up_png,thumb_pb_png,track_pb_png,track_sb_png,bg_jpg,egret_icon_png,description_json,kunai_png,timber_png,dou_png,logo_png,btn2_png,btn1_png,1_jpg,3_jpg,4_jpg",
 			"name": "preload"
 		}
 	],
@@ -150,6 +150,36 @@
 			"name": "dou_png",
 			"type": "image",
 			"url": "assets/dou.png"
+		},
+		{
+			"name": "logo_png",
+			"type": "image",
+			"url": "assets/logo.png"
+		},
+		{
+			"name": "btn2_png",
+			"type": "image",
+			"url": "assets/btn2.png"
+		},
+		{
+			"name": "btn1_png",
+			"type": "image",
+			"url": "assets/btn1.png"
+		},
+		{
+			"name": "1_jpg",
+			"type": "image",
+			"url": "assets/1.jpg"
+		},
+		{
+			"name": "3_jpg",
+			"type": "image",
+			"url": "assets/3.jpg"
+		},
+		{
+			"name": "4_jpg",
+			"type": "image",
+			"url": "assets/4.jpg"
 		}
 	]
 }

@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-class MainC extends eui.UILayer {
+class Main extends eui.UILayer {
   protected createChildren(): void {
     console.log(this)
     super.createChildren();

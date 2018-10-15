@@ -10,7 +10,6 @@
 	],
 	"game": [
 		"bin-debug/Main.js",
-		"bin-debug/ViewManager.js",
 		"bin-debug/containers/GameEndPanel.js",
 		"bin-debug/containers/GamePlayingPanel.js",
 		"bin-debug/containers/GameStartPanel.js",
