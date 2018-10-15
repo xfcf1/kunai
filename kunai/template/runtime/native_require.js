@@ -31,12 +31,12 @@ egret_native.egretStart = function () {
         //以下为自动修改，请勿修改
         //The following is automatically modified, please do not modify
         //----auto option start----
-		entryClassName: "Main",
+		entryClassName: "MainC",
 		frameRate: 30,
 		scaleMode: "showAll",
 		contentWidth: 414,
 		contentHeight: 736,
-		showPaintRect: false,
+		showPaintRect: true,
 		showFPS: false,
 		fpsStyles: "x:0,y:0,size:12,textColor:0xffffff,bgAlpha:0.9",
 		showLog: false,

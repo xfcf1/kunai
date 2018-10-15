@@ -9,10 +9,14 @@
 		"libs/egretad/bin/egretad.js"
 	],
 	"game": [
-		"bin-debug/AssetAdapter.js",
-		"bin-debug/LoadingUI.js",
 		"bin-debug/Main.js",
-		"bin-debug/Platform.js",
-		"bin-debug/ThemeAdapter.js"
+		"bin-debug/ViewManager.js",
+		"bin-debug/containers/GameEndPanel.js",
+		"bin-debug/containers/GamePlayingPanel.js",
+		"bin-debug/containers/GameStartPanel.js",
+		"bin-debug/tools/AssetAdapter.js",
+		"bin-debug/tools/LoadingUI.js",
+		"bin-debug/tools/Platform.js",
+		"bin-debug/tools/ThemeAdapter.js"
 	]
 }
