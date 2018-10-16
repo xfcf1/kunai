@@ -1,5 +1,6 @@
 class GamePlayingPanel extends egret.Sprite {
-  public static CHANG_EPANEL: string = 'changepanel'
+  public static GAME_END: string = 'gameend'
+  public static GAME_RESTART: string = 'gamerestart'
   private bg: egret.Shape
   private endBtn: egret.TextField
 
@@ -39,11 +40,10 @@ class GamePlayingPanel extends egret.Sprite {
   // }
 
   public end() {
-    // const { endBtn, onTouchTap } = this
-    // endBtn.$touchEnabled = false
-    // if (endBtn.hasEventListener(egret.TouchEvent.TOUCH_TAP)) {
-    //   endBtn.removeEventListener(egret.TouchEvent.TOUCH_TAP, onTouchTap, this)
-    // }
+    this.removeChild(this.timber)
+    this.removeChild(this.kunai)
+    this.removeChild(this.textfield)
+    this.resetGame()
   }
 
 
@@ -57,6 +57,7 @@ class GamePlayingPanel extends egret.Sprite {
   protected kunaiW: number = 21
   protected kunaiH:number = 100
   protected rate:number = 35
+  private dialog: Dialog
 
   // 关数限定
   private kunaiNum: number = 9
@@ -84,6 +85,9 @@ class GamePlayingPanel extends egret.Sprite {
     this.createKunai()
     this.createKunaiNum()
     this.startAnimation()
+
+    // 创建分享及广告
+    this.share()
   }
 	/**
 	 * 根据name关键字创建一个Bitmap对象。name属性请参考resources/resource.json配置文件的内容。
@@ -100,7 +104,7 @@ class GamePlayingPanel extends egret.Sprite {
 	 * Description file loading is successful, start to play the animation
 	 */
   private startAnimation(): void {
-    this.gameover()
+    // this.gameover()
     if (this.timberInterval) {
       clearInterval(this.timberInterval)
     }
@@ -347,11 +351,17 @@ class GamePlayingPanel extends egret.Sprite {
     // panel.y = this.stage.stageHeight - 320
     // panel.addEventListener(eui.UIEvent.CLOSING, this.resetGame, this)
     // this.addChild(panel)
-    const dialog: Dialog = new Dialog()
-    dialog.init()
-    this.addChild(dialog)
-    dialog.x = this.stage.stageWidth / 2 - dialog._width / 2
-    dialog.y = this.stage.stageHeight / 2 - dialog._height / 2
+    this.dialog = new Dialog()
+    this.dialog.init()
+    this.addChild(this.dialog)
+    this.dialog.x = this.stage.stageWidth / 2 - this.dialog._width / 2
+    this.dialog.y = this.stage.stageHeight / 2 - this.dialog._height / 2
+    this.dialog.addEventListener(Dialog.GO_HOME, () => {
+      this.dispatchEventWith(GamePlayingPanel.GAME_END)
+    }, this)
+    this.dialog.addEventListener(Dialog.RESTART, () => {
+      this.resetGame()
+    }, this)
   }
 
   private resetGame() {
@@ -365,10 +375,13 @@ class GamePlayingPanel extends egret.Sprite {
     // 重置木桩的角度并开始动画
     this.startAnimation()
 
-    this.dispatchEventWith(GamePlayingPanel.CHANG_EPANEL)
-    this.removeChild(this.timber)
-    this.removeChild(this.kunai)
-    this.removeChild(this.textfield)
+    this.removeChild(this.dialog)
+    this.dialog.removeEventListener(Dialog.GO_HOME, () => {
+      this.dispatchEventWith(GamePlayingPanel.GAME_END)
+    }, this)
+    this.dialog.removeEventListener(Dialog.RESTART, () => {
+      this.resetGame()
+    }, this)
   }
 
   private cleanBitmap() {
@@ -396,6 +409,27 @@ class GamePlayingPanel extends egret.Sprite {
           this.removeChild(dou)
         })
     }
+  }
+
+  private share() {
+    const { stage } = this
+    const s1 = this.createBitmapByName('s1_png')
+    s1.width = 118 * .5
+    s1.height = 107 * .5
+    s1.x = stage.stageWidth - s1.width
+    s1.y = stage.stageHeight - 330
+    const s1y = s1.y
+    this.addChild(s1)
+    egret.Tween.get(s1, { loop: true }).to({ y: s1.y + 10 }, 1000).to({ y: s1y }, 1000)
+
+    const s2 = this.createBitmapByName('s2_png')
+    s2.width = 119 * .5
+    s2.height = 106 * .5
+    s2.x = stage.stageWidth - s1.width
+    s2.y = stage.stageHeight - 250
+    const s2y = s2.y
+    this.addChild(s2)
+    egret.Tween.get(s2, { loop: true }).to({ y: s2.y - 10 }, 1000).to({ y: s2y }, 1000)
   }
 }
 
