@@ -1,0 +1,84 @@
+/**
+ * 首页底部
+ */
+
+class Bottom extends egret.Sprite {
+  constructor() {
+    super()
+  }
+
+  public height: number = 100
+
+  public init(stage: egret.Stage) {
+    const bg: egret.Shape = new egret.Shape
+    bg.graphics.beginFill(0x000000, .5)
+    bg.graphics.drawRect(0, 0, stage.width, this.height)
+    bg.graphics.endFill()
+    this.addChild(bg)
+
+    const b1: egret.Bitmap = new egret.Bitmap()
+    b1.texture = RES.getRes('b1_png')
+    b1.width = 53 * .5
+    b1.height = 52 * .5
+    b1.x = 30
+    b1.y = 20
+    this.addChild(b1)
+
+    const t1: egret.TextField = new egret.TextField()
+    t1.text = '好友排行'
+    t1.size = 12
+    t1.textColor = 0xffffff
+    t1.x = 20
+    t1.y = 60
+    this.addChild(t1)
+
+    const b2: egret.Bitmap = new egret.Bitmap()
+    b2.texture = RES.getRes('b2_png')
+    b2.width = 47 * .5
+    b2.height = 46 * .5
+    b2.x = 130
+    b2.y = 20
+    this.addChild(b2)
+
+    const t2: egret.TextField = new egret.TextField()
+    t2.text = '群内排行'
+    t2.size = 12
+    t2.textColor = 0xffffff
+    t2.x = 120
+    t2.y = 60
+    this.addChild(t2)
+
+    const b3: egret.Bitmap = new egret.Bitmap()
+    b3.texture = RES.getRes('b3_png')
+    b3.width = 51 * .5
+    b3.height = 51 * .5
+    b3.x = 230
+    b3.y = 20
+    this.addChild(b3)
+
+    const t3: egret.TextField = new egret.TextField()
+    t3.text = '世界排行'
+    t3.size = 12
+    t3.textColor = 0xffffff
+    t3.x = 220
+    t3.y = 60
+    this.addChild(t3)
+
+    const b4: egret.Bitmap = new egret.Bitmap()
+    b4.texture = RES.getRes('b4_png')
+    b4.width = 60 * .5
+    b4.height = 58 * .5
+    b4.x = 330
+    b4.y = 20
+    this.addChild(b4)
+
+    const t4: egret.TextField = new egret.TextField()
+    t4.text = '皮肤'
+    t4.size = 12
+    t4.textColor = 0xffffff
+    t4.x = 333
+    t4.y = 60
+    this.addChild(t4)
+    
+  }
+}

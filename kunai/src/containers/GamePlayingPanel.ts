@@ -100,6 +100,7 @@ class GamePlayingPanel extends egret.Sprite {
 	 * Description file loading is successful, start to play the animation
 	 */
   private startAnimation(): void {
+    this.gameover()
     if (this.timberInterval) {
       clearInterval(this.timberInterval)
     }
@@ -346,62 +347,11 @@ class GamePlayingPanel extends egret.Sprite {
     // panel.y = this.stage.stageHeight - 320
     // panel.addEventListener(eui.UIEvent.CLOSING, this.resetGame, this)
     // this.addChild(panel)
-    const { stage } = this
-    const mask: egret.Shape = new egret.Shape()
-    mask.graphics.beginFill(0x000000, .6)
-    mask.graphics.drawRoundRect(stage.stageWidth / 2 - 150, stage.stageHeight / 2 - 200, 300, 400, 10)
-    this.addChild(mask)
-
-    const tip: egret.TextField = new egret.TextField()
-    tip.x = stage.stageWidth / 2 - 30
-    tip.y = stage.stageHeight / 2 - 190
-    tip.text = '游戏失败'
-    tip.textColor = 0xffffff
-    tip.size = 18
-    this.addChild(tip)
-
-    const restartBtn: egret.Shape = new egret.Shape()
-    restartBtn.graphics.beginGradientFill(egret.GradientType.LINEAR, [0x15c30c, 0x82ee5b], [1, 1], [150, 220])
-    restartBtn.graphics.drawRoundRect(stage.stageWidth / 2 - 120, 440, 240, 40, 10)
-    this.addChild(restartBtn)
-    restartBtn.touchEnabled = true
-    restartBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.resetGame, this)
-
-    const restartTxt: egret.TextField = new egret.TextField
-    restartTxt.textColor = 0xffffff
-    restartTxt.size = 16
-    restartTxt.text = '重 新 开 始'
-    restartTxt.x = stage.stageWidth / 2 - 40
-    restartTxt.y = 455
-    this.addChild(restartTxt)
-
-    const shareBtn: egret.Shape = new egret.Shape()
-    shareBtn.graphics.beginGradientFill(egret.GradientType.LINEAR, [0x4292e9, 0x85bcf9], [1, 1], [150, 220])
-    shareBtn.graphics.drawRoundRect(stage.stageWidth / 2 - 120, 500, 110, 40, 10)
-    this.addChild(shareBtn)
-
-    const shareTxt: egret.TextField = new egret.TextField
-    shareTxt.textColor = 0xffffff
-    shareTxt.size = 16
-    shareTxt.text = '分享复活'
-    shareTxt.x = stage.stageWidth / 2 - 100
-    shareTxt.y = 515
-    this.addChild(shareTxt)
-
-
-    const adBtn: egret.Shape = new egret.Shape()
-    adBtn.graphics.beginGradientFill(egret.GradientType.LINEAR, [0xf1bf4e, 0xfcdb69], [1, 1], [150, 220])
-    adBtn.graphics.drawRoundRect(stage.stageWidth / 2 + 10, 500, 110, 40, 10)
-    this.addChild(adBtn)
-
-    const adTxt: egret.TextField = new egret.TextField
-    adTxt.textColor = 0xffffff
-    adTxt.size = 16
-    adTxt.text = '看广告复活'
-    adTxt.x = stage.stageWidth / 2 + 30
-    adTxt.y = 515
-    this.addChild(adTxt)
-
+    const dialog: Dialog = new Dialog()
+    dialog.init()
+    this.addChild(dialog)
+    dialog.x = this.stage.stageWidth / 2 - dialog._width / 2
+    dialog.y = this.stage.stageHeight / 2 - dialog._height / 2
   }
 
   private resetGame() {

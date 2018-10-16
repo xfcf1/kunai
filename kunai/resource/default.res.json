@@ -1,7 +1,7 @@
 {
 	"groups": [
 		{
-			"keys": "checkbox_select_disabled_png,checkbox_select_down_png,checkbox_select_up_png,checkbox_unselect_png,selected_png,border_png,header_png,radiobutton_select_disabled_png,radiobutton_select_down_png,radiobutton_select_up_png,radiobutton_unselect_png,roundthumb_png,thumb_png,track_png,tracklight_png,handle_png,off_png,on_png,button_down_png,button_up_png,thumb_pb_png,track_pb_png,track_sb_png,bg_jpg,egret_icon_png,description_json,kunai_png,timber_png,dou_png,logo_png,btn2_png,btn1_png,1_jpg,3_jpg,4_jpg",
+			"keys": "checkbox_select_disabled_png,checkbox_select_down_png,checkbox_select_up_png,checkbox_unselect_png,selected_png,border_png,header_png,radiobutton_select_disabled_png,radiobutton_select_down_png,radiobutton_select_up_png,radiobutton_unselect_png,roundthumb_png,thumb_png,track_png,tracklight_png,handle_png,off_png,on_png,button_down_png,button_up_png,thumb_pb_png,track_pb_png,track_sb_png,egret_icon_png,description_json,kunai_png,timber_png,dou_png,logo_png,1_jpg,4_jpg,btn_bg_grey_png,btn_bg_purple_png,btn_bg_pink_png,btn_bg_brown_png,btn_bg_green_png,btn_bg_blue_png,pk_png,b4_png,b3_png,b2_png,b1_png",
 			"name": "preload"
 		}
 	],
@@ -132,54 +132,109 @@
 			"name": "egret_icon_png"
 		},
 		{
-			"name": "description_json",
+			"url": "config/description.json",
 			"type": "json",
-			"url": "config/description.json"
+			"name": "description_json"
 		},
 		{
-			"name": "kunai_png",
+			"url": "assets/kunai.png",
 			"type": "image",
-			"url": "assets/kunai.png"
+			"name": "kunai_png"
 		},
 		{
-			"name": "timber_png",
+			"url": "assets/timber.png",
 			"type": "image",
-			"url": "assets/timber.png"
+			"name": "timber_png"
 		},
 		{
-			"name": "dou_png",
+			"url": "assets/dou.png",
 			"type": "image",
-			"url": "assets/dou.png"
+			"name": "dou_png"
 		},
 		{
-			"name": "logo_png",
+			"url": "assets/logo.png",
 			"type": "image",
-			"url": "assets/logo.png"
+			"name": "logo_png"
 		},
 		{
-			"name": "btn2_png",
+			"url": "assets/btn2.png",
 			"type": "image",
-			"url": "assets/btn2.png"
+			"name": "btn2_png"
 		},
 		{
-			"name": "btn1_png",
+			"url": "assets/btn1.png",
 			"type": "image",
-			"url": "assets/btn1.png"
+			"name": "btn1_png"
 		},
 		{
-			"name": "1_jpg",
+			"url": "assets/1.jpg",
 			"type": "image",
-			"url": "assets/1.jpg"
+			"name": "1_jpg"
 		},
 		{
-			"name": "3_jpg",
+			"url": "assets/3.jpg",
 			"type": "image",
-			"url": "assets/3.jpg"
+			"name": "3_jpg"
 		},
 		{
-			"name": "4_jpg",
+			"url": "assets/4.jpg",
 			"type": "image",
-			"url": "assets/4.jpg"
+			"name": "4_jpg"
+		},
+		{
+			"name": "btn_bg_grey_png",
+			"type": "image",
+			"url": "assets/btn_bg_grey.png"
+		},
+		{
+			"name": "btn_bg_purple_png",
+			"type": "image",
+			"url": "assets/btn_bg_purple.png"
+		},
+		{
+			"name": "btn_bg_pink_png",
+			"type": "image",
+			"url": "assets/btn_bg_pink.png"
+		},
+		{
+			"name": "btn_bg_brown_png",
+			"type": "image",
+			"url": "assets/btn_bg_brown.png"
+		},
+		{
+			"name": "btn_bg_green_png",
+			"type": "image",
+			"url": "assets/btn_bg_green.png"
+		},
+		{
+			"name": "btn_bg_blue_png",
+			"type": "image",
+			"url": "assets/btn_bg_blue.png"
+		},
+		{
+			"name": "pk_png",
+			"type": "image",
+			"url": "assets/pk.png"
+		},
+		{
+			"name": "b4_png",
+			"type": "image",
+			"url": "assets/b4.png"
+		},
+		{
+			"name": "b3_png",
+			"type": "image",
+			"url": "assets/b3.png"
+		},
+		{
+			"name": "b2_png",
+			"type": "image",
+			"url": "assets/b2.png"
+		},
+		{
+			"name": "b1_png",
+			"type": "image",
+			"url": "assets/b1.png"
 		}
 	]
 }
