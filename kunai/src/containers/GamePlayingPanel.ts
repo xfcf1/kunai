@@ -1,52 +1,8 @@
 class GamePlayingPanel extends egret.Sprite {
   public static GAME_END: string = 'gameend'
   public static GAME_RESTART: string = 'gamerestart'
-  private bg: egret.Shape
-  private endBtn: egret.TextField
 
-  public constructor() {
-    super()
-    // this.init()
-  }
-
-  public start() {
-    // const { endBtn, onTouchTap } = this
-    // endBtn.touchEnabled = true
-    // endBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, onTouchTap, this)
-
-    const { stage } = this
-    const img = new egret.Bitmap()
-    img.texture = RES.getRes('4_jpg')
-    img.x = 0
-    img.y = 0
-    img.width = stage.stageWidth
-    img.height = stage.stageHeight
-    img.alpha = .4
-    this.addChild(img)
-
-    this.initGame()
-  }
-
-  // private init() {
-  //   this.endBtn = new egret.TextField()
-  //   this.endBtn.text = '结束游戏'
-  //   this.endBtn.x = 450 / 2 - this.endBtn.width
-  //   this.endBtn.y = 400
-  //   this.addChild(this.endBtn)
-  // }
-
-  // private onTouchTap() {
-  //   this.dispatchEventWith(GamePlayingPanel.CHANG_EPANEL)
-  // }
-
-  public end() {
-    this.removeChild(this.timber)
-    this.removeChild(this.kunai)
-    this.removeChild(this.textfield)
-    this.resetGame()
-  }
-
-
+  private bgimg: egret.Bitmap
   private textfield: egret.TextField;
   private timber: egret.Bitmap
   private kunai: egret.Bitmap
@@ -55,14 +11,47 @@ class GamePlayingPanel extends egret.Sprite {
   private isShooting: boolean = false
   private insertRotate: itemObj[] = []
   protected kunaiW: number = 21
-  protected kunaiH:number = 100
-  protected rate:number = 35
+  protected kunaiH: number = 100
+  protected rate: number = 35
   private dialog: Dialog
+  private s1: egret.Bitmap
+  private s2: egret.Bitmap
+  private layerNum: number
 
   // 关数限定
   private kunaiNum: number = 9
   private level: number = 1
   private kunaiNumTips: egret.TextField
+
+  public constructor() {
+    super()
+  }
+
+  public start() {
+    const { stage } = this
+    this.bgimg = new egret.Bitmap()
+    this.bgimg.texture = RES.getRes('4_jpg')
+    this.bgimg.x = 0
+    this.bgimg.y = 0
+    this.bgimg.width = stage.stageWidth
+    this.bgimg.height = stage.stageHeight
+    this.bgimg.alpha = .4
+    this.addChild(this.bgimg)
+
+    this.initGame()
+  }
+
+  public end() {
+    this.removeChild(this.bgimg)
+    this.removeChild(this.timber)
+    this.removeChild(this.kunai)
+    this.removeChild(this.textfield)
+    this.removeChild(this.s1)
+    this.removeChild(this.s2)
+    this.removeChild(this.kunaiNumTips)
+    this.resetGame()
+  }
+
 
 	/**
 	 * 创建场景界面
@@ -80,6 +69,8 @@ class GamePlayingPanel extends egret.Sprite {
     this.timber.anchorOffsetY = this.timber.height / 2
     this.timber.x = stageW / 2
     this.timber.y = 200
+
+    this.layerNum = this.numChildren
 
     this.createText()
     this.createKunai()
@@ -207,7 +198,7 @@ class GamePlayingPanel extends egret.Sprite {
     kunai.width = this.kunaiW
     kunai.height = this.kunaiH
     kunai.rotation = kunaiRotate ? kunaiRotate : 0
-    this.addChildAt(kunai, 1)
+    this.addChildAt(kunai, this.layerNum - 1)
     setInterval(() => {
       kunai.rotation += this.rotations
     }, this.rate)
@@ -252,12 +243,6 @@ class GamePlayingPanel extends egret.Sprite {
     this.textfield.textAlign = egret.HorizontalAlign.CENTER
     this.textfield.size = 14
     this.updateLevel()
-
-    // const shape2 = new egret.Shape()
-    // shape2.graphics.beginFill(0x2f1810, 5)
-    // shape2.graphics.drawRoundRect(-10, 10, 100, 50, 5)
-    // shape2.graphics.endFill()
-    // this.addChild(shape2)
 
     const tips = new egret.TextField()
     this.addChild(tips)
@@ -310,14 +295,6 @@ class GamePlayingPanel extends egret.Sprite {
 
   // 下一关
   private showNext() {
-    // const panel = new eui.Panel()
-    // panel.title = '恭喜过关，点击进入下一关'
-    // panel.width = 300
-    // panel.height = 230
-    // panel.x = this.stage.stageWidth / 2 - 150
-    // panel.y = this.stage.stageHeight - 320
-    // panel.addEventListener(eui.UIEvent.CLOSING, this.goNext, this)
-    // this.addChild(panel)
     this.goNext()
   }
 
@@ -413,23 +390,23 @@ class GamePlayingPanel extends egret.Sprite {
 
   private share() {
     const { stage } = this
-    const s1 = this.createBitmapByName('s1_png')
-    s1.width = 118 * .5
-    s1.height = 107 * .5
-    s1.x = stage.stageWidth - s1.width
-    s1.y = stage.stageHeight - 330
-    const s1y = s1.y
-    this.addChild(s1)
-    egret.Tween.get(s1, { loop: true }).to({ y: s1.y + 10 }, 1000).to({ y: s1y }, 1000)
+    this.s1 = this.createBitmapByName('s1_png')
+    this.s1.width = 118 * .5
+    this.s1.height = 107 * .5
+    this.s1.x = stage.stageWidth - this.s1.width
+    this.s1.y = stage.stageHeight - 330
+    const s1y = this.s1.y
+    this.addChild(this.s1)
+    egret.Tween.get(this.s1, { loop: true }).to({ y: this.s1.y + 10 }, 1000).to({ y: s1y }, 1000)
 
-    const s2 = this.createBitmapByName('s2_png')
-    s2.width = 119 * .5
-    s2.height = 106 * .5
-    s2.x = stage.stageWidth - s1.width
-    s2.y = stage.stageHeight - 250
-    const s2y = s2.y
-    this.addChild(s2)
-    egret.Tween.get(s2, { loop: true }).to({ y: s2.y - 10 }, 1000).to({ y: s2y }, 1000)
+    this.s2 = this.createBitmapByName('s2_png')
+    this.s2.width = 119 * .5
+    this.s2.height = 106 * .5
+    this.s2.x = stage.stageWidth - this.s2.width
+    this.s2.y = stage.stageHeight - 250
+    const s2y = this.s2.y
+    this.addChild(this.s2)
+    egret.Tween.get(this.s2, { loop: true }).to({ y: this.s2.y - 10 }, 1000).to({ y: s2y }, 1000)
   }
 }
 
