@@ -35,7 +35,9 @@ class Dialog extends egret.Sprite {
     this.addChild(tip)
 
     homeBtn = new Buttons()
-    homeBtn.init(3, '回到首页', 12, 90, 32)
+    homeBtn.init(3, '回到首页')
+    homeBtn.scaleX = .5
+    homeBtn.scaleY = .5
     this.addChild(homeBtn)
     homeBtn.x = 30
     homeBtn.y = 300
@@ -44,24 +46,30 @@ class Dialog extends egret.Sprite {
     }, this)
 
     restartBtn = new Buttons()
-    restartBtn.init(1, '再玩一次', 12, 90, 32)
+    restartBtn.init(1, '再玩一次')
     this.addChild(restartBtn)
     restartBtn.x = 160
     restartBtn.y = 300
+    restartBtn.scaleX = .5
+    restartBtn.scaleY = .5
     restartBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
       this.dispatchEventWith(Dialog.RESTART)
     }, this)
 
     shareBtn = new Buttons()
-    shareBtn.init(2, '分享复活', 12, 90, 32)
+    shareBtn.init(2, '分享复活')
     this.addChild(shareBtn)
     shareBtn.x = 30
     shareBtn.y = 350
+    shareBtn.scaleX = .5
+    shareBtn.scaleY = .5
 
     adBtn = new Buttons()
-    adBtn.init(4, '免费复活', 12, 90, 32)
+    adBtn.init(4, '免费复活')
     this.addChild(adBtn)
     adBtn.x = 160
     adBtn.y = 350
+    adBtn.scaleX = .5
+    adBtn.scaleY = .5
   }
 }

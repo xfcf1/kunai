@@ -45,7 +45,6 @@ class GameStartPanel extends egret.Sprite {
     PK.x = stage.stageWidth
     egret.Tween.get(PK).to({ x: 105}, 500, egret.Ease.bounceOut)
 
-    bottom.init(stage)
     bottom.y = stage.stageHeight
     egret.Tween.get(bottom).to({ y: stage.stageHeight - bottom.height }, 500, egret.Ease.bounceOut)
 
@@ -86,6 +85,7 @@ class GameStartPanel extends egret.Sprite {
     // 生成底部
     this.bottom = new Bottom()
     this.addChild(this.bottom)
+    this.bottom.init()
   }
 
   private onTouchTap() {

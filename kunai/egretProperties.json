@@ -22,6 +22,9 @@
       "name": "promise"
     },
     {
+      "name": "game"
+    },
+    {
       "name": "egretad",
       "path": "./libs/egretad"
     }

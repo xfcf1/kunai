@@ -8,13 +8,16 @@ class Bottom extends egret.Sprite {
   }
 
   public height: number = 100
+  private _width: number = 1000
+  private bg: egret.Shape
 
-  public init(stage: egret.Stage) {
-    const bg: egret.Shape = new egret.Shape
+  public init() {
+    const bg: egret.Shape = new egret.Shape()
     bg.graphics.beginFill(0x000000, .5)
-    bg.graphics.drawRect(0, 0, stage.width, this.height)
+    bg.graphics.drawRect(0, 0, this._width, this.height)
     bg.graphics.endFill()
-    this.addChild(bg)
+    this.bg = bg
+    this.addChild(this.bg)
 
     const b1: egret.Bitmap = new egret.Bitmap()
     b1.texture = RES.getRes('b1_png')

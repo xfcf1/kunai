@@ -25,41 +25,35 @@ class GamePlayingPanel extends egret.Sprite {
 
   public constructor() {
     super()
-  }
-
-  public start() {
-    const { stage } = this
-    this.bgimg = new egret.Bitmap()
-    this.bgimg.texture = RES.getRes('4_jpg')
-    this.bgimg.x = 0
-    this.bgimg.y = 0
-    this.bgimg.width = stage.stageWidth
-    this.bgimg.height = stage.stageHeight
-    this.bgimg.alpha = .4
-    this.addChild(this.bgimg)
-
     this.initGame()
   }
 
-  public end() {
-    this.removeChild(this.bgimg)
-    this.removeChild(this.timber)
-    this.removeChild(this.kunai)
-    this.removeChild(this.textfield)
-    this.removeChild(this.s1)
-    this.removeChild(this.s2)
-    this.removeChild(this.kunaiNumTips)
-    this.resetGame()
+  public start() {
+    this.startAnimation()
   }
 
+  public end() {
+    this.resetGame()
+  }
 
 	/**
 	 * 创建场景界面
 	 * Create scene interface
 	 */
   protected initGame(): void {
-    const stageW = this.stage.stageWidth
-    const stageH = this.stage.stageHeight
+
+    const { stage } = egret.MainContext.instance
+    const stageW = stage.stageWidth
+    const stageH = stage.stageHeight
+
+    this.bgimg = new egret.Bitmap()
+    this.bgimg.texture = RES.getRes('4_jpg')
+    this.bgimg.x = 0
+    this.bgimg.y = 0
+    this.bgimg.width = stageW
+    this.bgimg.height = stageH
+    this.bgimg.alpha = .4
+    this.addChild(this.bgimg)
 
     this.timber = this.createBitmapByName('timber_png')
     this.addChild(this.timber)
@@ -75,7 +69,6 @@ class GamePlayingPanel extends egret.Sprite {
     this.createText()
     this.createKunai()
     this.createKunaiNum()
-    this.startAnimation()
 
     // 创建分享及广告
     this.share()
@@ -144,7 +137,7 @@ class GamePlayingPanel extends egret.Sprite {
   // 创建游戏点击区域
 
   private createClickable() {
-    const { stage } = this
+    const { stage } = egret.MainContext.instance
     const rect = new egret.Shape()
     rect.graphics.beginFill(0x000000, 0)
     rect.graphics.drawRect(0, stage.stageHeight - 200, stage.stageWidth, 300)
@@ -155,10 +148,11 @@ class GamePlayingPanel extends egret.Sprite {
   }
 
   private createKunai() {
+    const { stage } = egret.MainContext.instance
     this.kunai = this.createBitmapByName('kunai_png')
     this.addChild(this.kunai)
-    const stageW = this.stage.stageWidth
-    const stageH = this.stage.stageHeight
+    const stageW = stage.stageWidth
+    const stageH = stage.stageHeight
     this.kunai.width = this.kunaiW
     this.kunai.height = this.kunaiH
     this.kunai.x = stageW / 2 - 10
@@ -169,8 +163,9 @@ class GamePlayingPanel extends egret.Sprite {
   }
 
   private resetKunai() {
-    const stageW = this.stage.stageWidth
-    const stageH = this.stage.stageHeight
+    const { stage } = egret.MainContext.instance
+    const stageW = stage.stageWidth
+    const stageH = stage.stageHeight
     this.kunai.width = 20
     this.kunai.height = 100
     this.kunai.rotation = 0
@@ -184,6 +179,7 @@ class GamePlayingPanel extends egret.Sprite {
     // 数据存储木桩上的苦无坐标
     // 有kunaiRotate则是随机生成的苦无
     // 如果是用kunaiRotate做判断需要乘以-1
+    const { stage } = egret.MainContext.instance
     const rotate = kunaiRotate ? kunaiRotate * -1 : this.timber.rotation
     const range = []
     range.push(rotate - 10)
@@ -193,7 +189,7 @@ class GamePlayingPanel extends egret.Sprite {
     const kunai: egret.Bitmap = this.createBitmapByName('kunai_png')
     kunai.anchorOffsetX = 5
     kunai.anchorOffsetY = -52
-    kunai.x = this.stage.stageWidth / 2
+    kunai.x = stage.stageWidth / 2
     kunai.y = 200
     kunai.width = this.kunaiW
     kunai.height = this.kunaiH
@@ -216,6 +212,7 @@ class GamePlayingPanel extends egret.Sprite {
   }
 
   private flickKunai() {
+    const { stage } = egret.MainContext.instance
     const func = (): void => {
       setTimeout(() => {
         this.gameover()
@@ -223,12 +220,13 @@ class GamePlayingPanel extends egret.Sprite {
     }
 
     egret.Tween.get(this.kunai)
-      .to({ x: this.stage.stageWidth + 100, y: this.stage.$stageHeight + 100, rotation: 720 }, 700, egret.Ease.bounceOut)
+      .to({ x: stage.stageWidth + 100, y: stage.$stageHeight + 100, rotation: 720 }, 700, egret.Ease.bounceOut)
       .call(func, this)
   }
 
   // 文字提示
   private createText() {
+    const { stage } = egret.MainContext.instance
     const shape1 = new egret.Shape()
     shape1.graphics.beginFill(0x2f1810, .8)
     shape1.graphics.drawRoundRect(-10, 10, 80, 30, 10)
@@ -255,8 +253,8 @@ class GamePlayingPanel extends egret.Sprite {
 
     const kunaiTips = new egret.TextField()
     this.addChild(kunaiTips)
-    kunaiTips.x = this.stage.stageWidth - 120
-    kunaiTips.y = this.stage.stageHeight - 60
+    kunaiTips.x = stage.stageWidth - 120
+    kunaiTips.y = stage.stageHeight - 60
     kunaiTips.textColor = 0x000000
     kunaiTips.textAlign = egret.HorizontalAlign.CENTER
     kunaiTips.size = 10
@@ -271,17 +269,18 @@ class GamePlayingPanel extends egret.Sprite {
 
   // 绘制剩余苦无
   private createKunaiNum() {
+    const { stage } = egret.MainContext.instance
     const kunai = this.createBitmapByName('kunai_png')
     kunai.width = 10
     kunai.height = 50
     kunai.x = 30
-    kunai.y = this.stage.stageHeight - 100
+    kunai.y = stage.stageHeight - 100
     this.addChild(kunai)
 
     this.kunaiNumTips = new egret.TextField()
     this.addChild(this.kunaiNumTips)
     this.kunaiNumTips.x = 50
-    this.kunaiNumTips.y = this.stage.stageHeight - 80
+    this.kunaiNumTips.y = stage.stageHeight - 80
     this.kunaiNumTips.textColor = 0xFFFFFF
     this.kunaiNumTips.textAlign = egret.HorizontalAlign.LEFT
     this.kunaiNumTips.size = 14
@@ -320,19 +319,12 @@ class GamePlayingPanel extends egret.Sprite {
   }
 
   private gameover() {
-    // const panel = new eui.Panel()
-    // panel.title = '游戏失败，重新开始'
-    // panel.width = 300
-    // panel.height = 230
-    // panel.x = this.stage.stageWidth / 2 - 150
-    // panel.y = this.stage.stageHeight - 320
-    // panel.addEventListener(eui.UIEvent.CLOSING, this.resetGame, this)
-    // this.addChild(panel)
+    const { stage } = egret.MainContext.instance
     this.dialog = new Dialog()
     this.dialog.init()
     this.addChild(this.dialog)
-    this.dialog.x = this.stage.stageWidth / 2 - this.dialog._width / 2
-    this.dialog.y = this.stage.stageHeight / 2 - this.dialog._height / 2
+    this.dialog.x = stage.stageWidth / 2 - this.dialog._width / 2
+    this.dialog.y = stage.stageHeight / 2 - this.dialog._height / 2
     this.dialog.addEventListener(Dialog.GO_HOME, () => {
       this.dispatchEventWith(GamePlayingPanel.GAME_END)
     }, this)
@@ -370,7 +362,7 @@ class GamePlayingPanel extends egret.Sprite {
 
   // 木屑
   private woodBits() {
-    const { stageWidth, stageHeight } = this.stage
+    const { stageWidth, stageHeight } = egret.MainContext.instance.stage
     for (let i = 0; i < 4; i++) {
       const dou = this.createBitmapByName('dou_png')
       dou.width = 5
@@ -389,7 +381,7 @@ class GamePlayingPanel extends egret.Sprite {
   }
 
   private share() {
-    const { stage } = this
+    const { stage } = egret.MainContext.instance
     this.s1 = this.createBitmapByName('s1_png')
     this.s1.width = 118 * .5
     this.s1.height = 107 * .5

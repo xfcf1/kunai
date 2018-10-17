@@ -6,6 +6,7 @@
 		"libs/modules/assetsmanager/assetsmanager.js",
 		"libs/modules/tween/tween.js",
 		"libs/modules/promise/promise.js",
+		"libs/modules/game/game.js",
 		"libs/egretad/bin/egretad.js"
 	],
 	"game": [
