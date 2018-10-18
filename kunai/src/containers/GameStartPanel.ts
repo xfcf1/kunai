@@ -29,21 +29,22 @@ class GameStartPanel extends egret.Sprite {
 
     startPK.x = stage.stageWidth
     startPK.y = 500
+    startPK.addEventListener(egret.TouchEvent.TOUCH_TAP, onTouchTap, this)
     egret.Tween.get(startPK).to({ x: stage.stageWidth / 2 - startPK.width / 2}, 500, egret.Ease.bounceOut)
-    startPK.addEventListener(egret.TouchEvent.TOUCH_BEGIN, () => {
-      PK.x = PK.x + 2
-      PK.y = PK.y + 2
-    }, this)
-    startPK.addEventListener(egret.TouchEvent.TOUCH_END, () => {
-      PK.x = PK.x - 2
-      PK.y = PK.y - 2
-    }, this)
-    startPK.addEventListener(egret.TouchEvent.TOUCH_RELEASE_OUTSIDE, () => {
-      PK.x = PK.x - 2
-      PK.y = PK.y - 2
-    }, this)
-    PK.x = stage.stageWidth
-    egret.Tween.get(PK).to({ x: 105}, 500, egret.Ease.bounceOut)
+    // startPK.addEventListener(egret.TouchEvent.TOUCH_BEGIN, () => {
+    //   PK.x = PK.x + 2
+    //   PK.y = PK.y + 2
+    // }, this)
+    // startPK.addEventListener(egret.TouchEvent.TOUCH_END, () => {
+    //   PK.x = PK.x - 2
+    //   PK.y = PK.y - 2
+    // }, this)
+    // startPK.addEventListener(egret.TouchEvent.TOUCH_RELEASE_OUTSIDE, () => {
+    //   PK.x = PK.x - 2
+    //   PK.y = PK.y - 2
+    // }, this)
+    // PK.x = stage.stageWidth
+    // egret.Tween.get(PK).to({ x: 105}, 500, egret.Ease.bounceOut)
 
     bottom.y = stage.stageHeight
     egret.Tween.get(bottom).to({ y: stage.stageHeight - bottom.height }, 500, egret.Ease.bounceOut)
@@ -72,15 +73,15 @@ class GameStartPanel extends egret.Sprite {
 
     this.startPK = new Buttons()
     this.addChild(this.startPK )
-    this.startPK .init(2, '实时对战')
+    this.startPK .init(4, '疯狂模式')
 
-    const pk: egret.Bitmap = new egret.Bitmap()
-    pk.texture = RES.getRes('pk_png')
-    pk.width = 94 * .5
-    pk.height = 70 * .5
-    pk.y = 486
-    this.PK = pk
-    this.addChild(this.PK)
+    // const pk: egret.Bitmap = new egret.Bitmap()
+    // pk.texture = RES.getRes('pk_png')
+    // pk.width = 94 * .5
+    // pk.height = 70 * .5
+    // pk.y = 486
+    // this.PK = pk
+    // this.addChild(this.PK)
 
     // 生成底部
     this.bottom = new Bottom()

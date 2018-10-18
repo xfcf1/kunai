@@ -1,12 +1,14 @@
 class Dialog extends egret.Sprite {
   constructor() {
     super()
+    this.init()
   }
 
   public static GO_HOME: string = 'gohome'
   public static RESTART: string = 'restart'
   public static SHARE_WX: string = 'sharewx'
   public static VIEW_AD: string = 'viewad'
+  public static REBIRTH: string = 'rebirth'
   public _width: number = 280
   public _height: number = 400
   private GAME_RESTART: string = 'gamerestart'
@@ -18,8 +20,9 @@ class Dialog extends egret.Sprite {
   private restartBtn: Buttons
   private shareBtn: Buttons
   private adBtn: Buttons
+  private scores: egret.TextField
 
-  public init () {
+  private init () {
     let { maskBlack, tip, homeBtn, restartBtn, shareBtn, adBtn } = this
     maskBlack = new egret.Shape()
     maskBlack.graphics.beginFill(0x000000, .8)
@@ -28,7 +31,7 @@ class Dialog extends egret.Sprite {
 
     tip = new egret.TextField()
     tip.y = 15
-    tip.text = '游戏失败'
+    tip.text = '本次得分'
     tip.textColor = 0xffffff
     tip.size = 18
     tip.x = this._width / 2 - tip.width / 2
@@ -57,7 +60,7 @@ class Dialog extends egret.Sprite {
     }, this)
 
     shareBtn = new Buttons()
-    shareBtn.init(2, '分享复活')
+    shareBtn.init(2, '炫耀战绩')
     this.addChild(shareBtn)
     shareBtn.x = 30
     shareBtn.y = 350
@@ -71,5 +74,22 @@ class Dialog extends egret.Sprite {
     adBtn.y = 350
     adBtn.scaleX = .5
     adBtn.scaleY = .5
+    adBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
+      this.dispatchEventWith(Dialog.REBIRTH)
+    }, this)
+
+    this.scores = new egret.TextField()
+    this.scores.text = '0'
+    this.scores.textAlign = egret.HorizontalAlign.CENTER
+    this.scores.size = 22
+    this.scores.textColor = 0xffffff
+    this.scores.y = 40
+    this.scores.x = this._width / 2 -this.scores.width / 2
+    this.addChild(this.scores)
+  }
+
+  public setScores(text: string) {
+    this.scores.text = `${text}`
+    this.scores.x = this._width / 2 -this.scores.width / 2
   }
 }

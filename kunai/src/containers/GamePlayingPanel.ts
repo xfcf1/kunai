@@ -17,6 +17,7 @@ class GamePlayingPanel extends egret.Sprite {
   private s1: egret.Bitmap
   private s2: egret.Bitmap
   private layerNum: number
+  private scores: egret.TextField
 
   // 关数限定
   private kunaiNum: number = 9
@@ -62,13 +63,14 @@ class GamePlayingPanel extends egret.Sprite {
     this.timber.anchorOffsetX = this.timber.width / 2
     this.timber.anchorOffsetY = this.timber.height / 2
     this.timber.x = stageW / 2
-    this.timber.y = 200
+    this.timber.y = 230
 
     this.layerNum = this.numChildren
 
     this.createText()
     this.createKunai()
     this.createKunaiNum()
+    this.createScores()
 
     // 创建分享及广告
     this.share()
@@ -88,7 +90,7 @@ class GamePlayingPanel extends egret.Sprite {
 	 * Description file loading is successful, start to play the animation
 	 */
   private startAnimation(): void {
-    // this.gameover()
+    // this.showDialog()
     if (this.timberInterval) {
       clearInterval(this.timberInterval)
     }
@@ -122,6 +124,7 @@ class GamePlayingPanel extends egret.Sprite {
           .to({ x: timberX, y: timberY }, 20, egret.Ease.bounceInOut)
 
         this.createRotateKunai()
+        this.updateScores()
 
         // 判断及动画完成以后进行游戏判断
         if (this.kunaiNum <= 0) {
@@ -130,7 +133,7 @@ class GamePlayingPanel extends egret.Sprite {
       }
     }
     egret.Tween.get(this.kunai)
-      .to({ y: 370 }, 150, egret.Ease.cubicIn)
+      .to({ y: 380 }, 150, egret.Ease.cubicIn)
       .call(func, this)
   }
 
@@ -156,7 +159,7 @@ class GamePlayingPanel extends egret.Sprite {
     this.kunai.width = this.kunaiW
     this.kunai.height = this.kunaiH
     this.kunai.x = stageW / 2 - 10
-    this.kunai.y = stageH - 200
+    this.kunai.y = stageH - 170
 
     this.createRandomKunai()
     this.createClickable()
@@ -170,7 +173,7 @@ class GamePlayingPanel extends egret.Sprite {
     this.kunai.height = 100
     this.kunai.rotation = 0
     this.kunai.x = stageW / 2 - 10
-    this.kunai.y = stageH - 200
+    this.kunai.y = stageH - 170
 
     this.isShooting = false
   }
@@ -190,7 +193,7 @@ class GamePlayingPanel extends egret.Sprite {
     kunai.anchorOffsetX = 5
     kunai.anchorOffsetY = -52
     kunai.x = stage.stageWidth / 2
-    kunai.y = 200
+    kunai.y = 230
     kunai.width = this.kunaiW
     kunai.height = this.kunaiH
     kunai.rotation = kunaiRotate ? kunaiRotate : 0
@@ -204,6 +207,15 @@ class GamePlayingPanel extends egret.Sprite {
     this.resetKunai()
   }
 
+  private removeRotateKunai(num: number = 3) {
+    for (let i = 0; i < num; i++) {
+      let item = this.insertRotate.splice(1, 1)[0]
+      egret.Tween.get(item.kunai).to({ alpha: 0 }, 100).call(() => {
+        item.kunai.parent.removeChild(item.kunai)
+      }, this)
+    }
+  }
+
   private calcCollision = (rotate: number): boolean => {
     const { insertRotate } = this
     return insertRotate.some((item: itemObj): boolean => {
@@ -215,12 +227,12 @@ class GamePlayingPanel extends egret.Sprite {
     const { stage } = egret.MainContext.instance
     const func = (): void => {
       setTimeout(() => {
-        this.gameover()
+        this.showDialog()
       }, 500)
     }
 
     egret.Tween.get(this.kunai)
-      .to({ x: stage.stageWidth + 100, y: stage.$stageHeight + 100, rotation: 720 }, 700, egret.Ease.bounceOut)
+      .to({ x: stage.stageWidth + 100, y: stage.stageHeight + 100, rotation: 720 }, 700, egret.Ease.bounceOut)
       .call(func, this)
   }
 
@@ -292,9 +304,45 @@ class GamePlayingPanel extends egret.Sprite {
     this.kunaiNumTips.text = `x ${this.kunaiNum}`
   }
 
+
+  // 创建分数
+  private createScores() {
+    const { stage } = egret.MainContext.instance
+    const shape: egret.Shape = new egret.Shape()
+    shape.graphics.beginFill(0xffffff, .8)
+    shape.graphics.drawRoundRect(stage.stageWidth / 2 - 50, 10, 100, 60, 10)
+    shape.graphics.endFill()
+    this.addChild(shape)
+
+    const text: egret.TextField = new egret.TextField()
+    text.size = 18
+    text.textColor = 0x000000
+    text.text = '得分'
+    text.x = stage.stageWidth / 2 - text.width / 2
+    text.y = 20
+    this.addChild(text)
+
+    this.scores = new egret.TextField()
+    this.scores.size = 16
+    this.scores.textColor = 0x000000
+    this.scores.text = '0'
+    this.scores.x = stage.stageWidth / 2 - this.scores.width / 2
+    this.scores.y = 45
+    this.addChild(this.scores)
+  }
+
+  // 更新得分
+  private updateScores(s?: number) {
+    const { stage } = egret.MainContext.instance
+    this.scores.text = typeof s === 'number' ? `${s}` : `${parseInt(this.scores.text) + 1}`
+    this.scores.x = stage.stageWidth / 2 - this.scores.width / 2
+  }
+
   // 下一关
   private showNext() {
-    this.goNext()
+    setTimeout(() => {
+      this.goNext()
+    }, 300)
   }
 
   private goNext() {
@@ -318,10 +366,10 @@ class GamePlayingPanel extends egret.Sprite {
     }
   }
 
-  private gameover() {
+  private showDialog() {
     const { stage } = egret.MainContext.instance
     this.dialog = new Dialog()
-    this.dialog.init()
+    this.dialog.setScores(this.scores.text)
     this.addChild(this.dialog)
     this.dialog.x = stage.stageWidth / 2 - this.dialog._width / 2
     this.dialog.y = stage.stageHeight / 2 - this.dialog._height / 2
@@ -331,19 +379,12 @@ class GamePlayingPanel extends egret.Sprite {
     this.dialog.addEventListener(Dialog.RESTART, () => {
       this.resetGame()
     }, this)
+    this.dialog.addEventListener(Dialog.REBIRTH, () => {
+      this.rebirth()
+    }, this)
   }
 
-  private resetGame() {
-    this.level = 1
-    this.kunaiNum = 9
-    this.updateKunaiNum()
-    this.updateLevel()
-    this.cleanBitmap()
-    this.resetKunai()
-    this.createRandomKunai()
-    // 重置木桩的角度并开始动画
-    this.startAnimation()
-
+  private closeDialog() {
     this.removeChild(this.dialog)
     this.dialog.removeEventListener(Dialog.GO_HOME, () => {
       this.dispatchEventWith(GamePlayingPanel.GAME_END)
@@ -351,6 +392,23 @@ class GamePlayingPanel extends egret.Sprite {
     this.dialog.removeEventListener(Dialog.RESTART, () => {
       this.resetGame()
     }, this)
+    this.dialog.removeEventListener(Dialog.REBIRTH, () => {
+      this.rebirth()
+    }, this)
+  }
+
+  private resetGame() {
+    this.closeDialog()
+    this.level = 1
+    this.kunaiNum = 9
+    this.updateKunaiNum()
+    this.updateLevel()
+    this.cleanBitmap()
+    this.resetKunai()
+    this.createRandomKunai()
+    this.updateScores(0)
+    // 重置木桩的角度并开始动画
+    this.startAnimation()
   }
 
   private cleanBitmap() {
@@ -390,15 +448,27 @@ class GamePlayingPanel extends egret.Sprite {
     const s1y = this.s1.y
     this.addChild(this.s1)
     egret.Tween.get(this.s1, { loop: true }).to({ y: this.s1.y + 10 }, 1000).to({ y: s1y }, 1000)
+    this.s1.touchEnabled = true
+    this.s1.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
+      this.removeRotateKunai(3)
+    }, this)
 
-    this.s2 = this.createBitmapByName('s2_png')
-    this.s2.width = 119 * .5
-    this.s2.height = 106 * .5
-    this.s2.x = stage.stageWidth - this.s2.width
-    this.s2.y = stage.stageHeight - 250
-    const s2y = this.s2.y
-    this.addChild(this.s2)
-    egret.Tween.get(this.s2, { loop: true }).to({ y: this.s2.y - 10 }, 1000).to({ y: s2y }, 1000)
+    // this.s2 = this.createBitmapByName('s2_png')
+    // this.s2.width = 119 * .5
+    // this.s2.height = 106 * .5
+    // this.s2.x = stage.stageWidth - this.s2.width
+    // this.s2.y = stage.stageHeight - 250
+    // const s2y = this.s2.y
+    // this.addChild(this.s2)
+    // egret.Tween.get(this.s2, { loop: true }).to({ y: this.s2.y - 10 }, 1000).to({ y: s2y }, 1000)
+  }
+
+  private rebirth() {
+    this.closeDialog()
+    this.resetKunai()
+
+    this.kunaiNum += 1
+    this.updateKunaiNum()
   }
 }
 
