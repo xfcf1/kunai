@@ -62,6 +62,9 @@ class WxgamePlatform {
       key: key,
       success: function(res) {
         if (func) func(res)
+      },
+      fail: function (e) {
+        if (func) func('')
       }
     })
   }

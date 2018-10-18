@@ -376,7 +376,7 @@ class GamePlayingPanel extends egret.Sprite {
       value: this.scores.text
     }
     platform.setUserCloudStorage(obj)
-    
+
   }
 
   private closeDialog() {
@@ -465,16 +465,13 @@ class GamePlayingPanel extends egret.Sprite {
     this.kunaiNum += 1
     this.updateKunaiNum()
   }
-  
+
   // 没有复活机会
   private noChance() {
     const msg: Msg = new Msg()
     this.addChild(msg)
     msg.init('一天只有三次复活机会哦')
-    setTimeout(() => {
-      this.removeChild(msg)
-    }, 3000)
-}
+  }
 }
 
 interface itemObj {
