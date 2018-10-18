@@ -209,10 +209,12 @@ class GamePlayingPanel extends egret.Sprite {
 
   private removeRotateKunai(num: number = 3) {
     for (let i = 0; i < num; i++) {
-      let item = this.insertRotate.splice(1, 1)[0]
-      egret.Tween.get(item.kunai).to({ alpha: 0 }, 100).call(() => {
-        item.kunai.parent.removeChild(item.kunai)
-      }, this)
+      let item = this.insertRotate.splice(0, 1)[0]
+      if (item && item.kunai) {
+        egret.Tween.get(item.kunai).to({ alpha: 0 }, 100).call(() => {
+          item.kunai.parent.removeChild(item.kunai)
+        }, this)
+      }
     }
   }
 
@@ -253,24 +255,6 @@ class GamePlayingPanel extends egret.Sprite {
     this.textfield.textAlign = egret.HorizontalAlign.CENTER
     this.textfield.size = 14
     this.updateLevel()
-
-    const tips = new egret.TextField()
-    this.addChild(tips)
-    tips.x = 10
-    tips.y = 50
-    tips.textColor = 0x000000
-    tips.textAlign = egret.HorizontalAlign.CENTER
-    tips.size = 10
-    tips.text = '射中全部苦无过关'
-
-    const kunaiTips = new egret.TextField()
-    this.addChild(kunaiTips)
-    kunaiTips.x = stage.stageWidth - 120
-    kunaiTips.y = stage.stageHeight - 60
-    kunaiTips.textColor = 0x000000
-    kunaiTips.textAlign = egret.HorizontalAlign.CENTER
-    kunaiTips.size = 10
-    kunaiTips.text = '点击苦无即可发射'
 
   }
 
@@ -366,7 +350,7 @@ class GamePlayingPanel extends egret.Sprite {
     }
   }
 
-  private showDialog() {
+  private async showDialog() {
     const { stage } = egret.MainContext.instance
     this.dialog = new Dialog()
     this.dialog.setScores(this.scores.text)
@@ -382,6 +366,17 @@ class GamePlayingPanel extends egret.Sprite {
     this.dialog.addEventListener(Dialog.REBIRTH, () => {
       this.rebirth()
     }, this)
+    this.dialog.addEventListener(Dialog.NOCHANCE, () => {
+      this.noChance()
+    }, this)
+
+    // 上传到云
+    const obj = {
+      key: 'score',
+      value: this.scores.text
+    }
+    platform.setUserCloudStorage(obj)
+    
   }
 
   private closeDialog() {
@@ -450,7 +445,7 @@ class GamePlayingPanel extends egret.Sprite {
     egret.Tween.get(this.s1, { loop: true }).to({ y: this.s1.y + 10 }, 1000).to({ y: s1y }, 1000)
     this.s1.touchEnabled = true
     this.s1.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
-      this.removeRotateKunai(3)
+      platform.share(this.removeRotateKunai(3))
     }, this)
 
     // this.s2 = this.createBitmapByName('s2_png')
@@ -463,13 +458,23 @@ class GamePlayingPanel extends egret.Sprite {
     // egret.Tween.get(this.s2, { loop: true }).to({ y: this.s2.y - 10 }, 1000).to({ y: s2y }, 1000)
   }
 
+  // 复活
   private rebirth() {
     this.closeDialog()
     this.resetKunai()
-
     this.kunaiNum += 1
     this.updateKunaiNum()
   }
+  
+  // 没有复活机会
+  private noChance() {
+    const msg: Msg = new Msg()
+    this.addChild(msg)
+    msg.init('一天只有三次复活机会哦')
+    setTimeout(() => {
+      this.removeChild(msg)
+    }, 3000)
+}
 }
 
 interface itemObj {

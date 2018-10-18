@@ -9,6 +9,7 @@ class Dialog extends egret.Sprite {
   public static SHARE_WX: string = 'sharewx'
   public static VIEW_AD: string = 'viewad'
   public static REBIRTH: string = 'rebirth'
+  public static NOCHANCE: string = 'nochance'
   public _width: number = 280
   public _height: number = 400
   private GAME_RESTART: string = 'gamerestart'
@@ -66,6 +67,9 @@ class Dialog extends egret.Sprite {
     shareBtn.y = 350
     shareBtn.scaleX = .5
     shareBtn.scaleY = .5
+    shareBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
+      platform.share()
+    }, this)
 
     adBtn = new Buttons()
     adBtn.init(4, '免费复活')
@@ -75,7 +79,24 @@ class Dialog extends egret.Sprite {
     adBtn.scaleX = .5
     adBtn.scaleY = .5
     adBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
-      this.dispatchEventWith(Dialog.REBIRTH)
+      const date = new Date()
+      const key = `${date.getFullYear()}${date.getMonth()}${date.getDate()}`
+      const that = this
+      platform.getData(key, function(res) {
+        if (!res || !res.data) {
+          that.dispatchEventWith(Dialog.REBIRTH)
+          platform.setData({ key, value: 1 })
+        } else if (res.data) {
+          let num = res.data
+          num += 1
+          if (num <= 3) {
+            that.dispatchEventWith(Dialog.REBIRTH)
+            platform.setData({ key, value: num })
+          } else {
+            that.dispatchEventWith(Dialog.NOCHANCE)
+          }
+        }
+      })
     }, this)
 
     this.scores = new egret.TextField()

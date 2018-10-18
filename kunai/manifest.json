@@ -14,6 +14,7 @@
 		"bin-debug/Main.js",
 		"bin-debug/components/Buttons.js",
 		"bin-debug/components/Dialog.js",
+		"bin-debug/components/Msg.js",
 		"bin-debug/containers/GameEndPanel.js",
 		"bin-debug/components/Bottom.js",
 		"bin-debug/containers/GameStartPanel.js",
