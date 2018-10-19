@@ -1,5 +1,6 @@
 class GameStartPanel extends egret.Sprite {
-  public static GAME_START: string = 'gamestart'
+  public static GAME_START_1: string = 'gamestart1'
+  public static GAME_START_2: string = 'gamestart2'
   private bg: egret.Shape
   private img: egret.Bitmap
   private logo: egret.Bitmap
@@ -24,12 +25,16 @@ class GameStartPanel extends egret.Sprite {
     startBtn.x = - startBtn.width
     startBtn.y = 400
     startBtn.touchEnabled = true
-    startBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, onTouchTap, this)
+    startBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
+      this.onTouchTap(1)
+    }, this)
     egret.Tween.get(startBtn).to({ x: stage.stageWidth / 2 - startBtn.width / 2 }, 500, egret.Ease.bounceOut)
 
     startPK.x = stage.stageWidth
     startPK.y = 500
-    startPK.addEventListener(egret.TouchEvent.TOUCH_TAP, onTouchTap, this)
+    startPK.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
+      this.onTouchTap(2)
+    }, this)
     egret.Tween.get(startPK).to({ x: stage.stageWidth / 2 - startPK.width / 2 }, 500, egret.Ease.bounceOut)
     // startPK.addEventListener(egret.TouchEvent.TOUCH_BEGIN, () => {
     //   PK.x = PK.x + 2
@@ -101,8 +106,14 @@ class GameStartPanel extends egret.Sprite {
     }, this);
   }
 
-  private onTouchTap() {
-    this.dispatchEventWith(GameStartPanel.GAME_START)
+  private onTouchTap(mode: number = 1) {
+    // mode1：简单
+    // mode2：疯狂
+    if (mode === 1) {
+      this.dispatchEventWith(GameStartPanel.GAME_START_1)
+    } else if (mode === 2) {
+      this.dispatchEventWith(GameStartPanel.GAME_START_2)
+    }
   }
 
   public end() {

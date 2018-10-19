@@ -120,16 +120,30 @@ class Main extends eui.UILayer {
 		// const { gameStartPanel, gamePlaying } = this
 		this.addChild(this.gameStartPanel)
     this.gameStartPanel.start()
-		this.gameStartPanel.addEventListener(GameStartPanel.GAME_START, this.gamePlaying, this)
+		this.gameStartPanel.addEventListener(GameStartPanel.GAME_START_1, this.gamePlaying1, this)
+		this.gameStartPanel.addEventListener(GameStartPanel.GAME_START_2, this.gamePlaying2, this)
 	}
 
-	private gamePlaying() {
+	private gamePlaying1() {
 		// const { gameStartPanel, gamePlayingPanel, gamePlaying, gameEnd } = this
 		this.gameStartPanel.end()
 		this.removeChild(this.gameStartPanel)
-		this.gameStartPanel.removeEventListener(GameStartPanel.GAME_START, this.gamePlaying, this)
+		this.gameStartPanel.removeEventListener(GameStartPanel.GAME_START_1, this.gamePlaying1, this)
+		this.gameStartPanel.removeEventListener(GameStartPanel.GAME_START_2, this.gamePlaying2, this)
 		this.addChild(this.gamePlayingPanel)
-    this.gamePlayingPanel.start()
+    this.gamePlayingPanel.start(1)
+		this.gamePlayingPanel.addEventListener(GamePlayingPanel.GAME_END, this.gameEnd, this)
+		this.gamePlayingPanel.addEventListener(GamePlayingPanel.GAME_RESTART, this.gameRestart, this)
+	}
+
+	private gamePlaying2() {
+		// const { gameStartPanel, gamePlayingPanel, gamePlaying, gameEnd } = this
+		this.gameStartPanel.end()
+		this.removeChild(this.gameStartPanel)
+		this.gameStartPanel.removeEventListener(GameStartPanel.GAME_START_1, this.gamePlaying1, this)
+		this.gameStartPanel.removeEventListener(GameStartPanel.GAME_START_2, this.gamePlaying2, this)
+		this.addChild(this.gamePlayingPanel)
+    this.gamePlayingPanel.start(2)
 		this.gamePlayingPanel.addEventListener(GamePlayingPanel.GAME_END, this.gameEnd, this)
 		this.gamePlayingPanel.addEventListener(GamePlayingPanel.GAME_RESTART, this.gameRestart, this)
 	}

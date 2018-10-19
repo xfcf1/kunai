@@ -2,6 +2,7 @@ class GamePlayingPanel extends egret.Sprite {
   public static GAME_END: string = 'gameend'
   public static GAME_RESTART: string = 'gamerestart'
 
+  private mode: number = 1
   private bgimg: egret.Bitmap
   private textfield: egret.TextField;
   private timber: egret.Bitmap
@@ -13,6 +14,7 @@ class GamePlayingPanel extends egret.Sprite {
   protected kunaiW: number = 21
   protected kunaiH: number = 100
   protected rate: number = 35
+  protected rateOffset: number = 0
   private dialog: Dialog
   private s1: egret.Bitmap
   private s2: egret.Bitmap
@@ -29,8 +31,31 @@ class GamePlayingPanel extends egret.Sprite {
     this.initGame()
   }
 
-  public start() {
+  public start(mode: number) {
+    // mode1：简单
+    // mode2：疯狂
+    this.mode = mode
     this.startAnimation()
+
+    let mat
+    if (this.mode === 1) {
+      mat = [
+          1, 0, 0, 0, 0,
+          0, 1, 0, 0, 0,
+          0, 0, 1, 0, 0,
+          0, 0, 0, 1, 0,
+        ]
+    } else if (this.mode === 2) {
+      // 反色背景
+      mat = [
+          -1, 0, 0, 0, 255,
+          0, -1, 0, 0, 255,
+          0, 0, -1, 0, 255,
+          0, 0, 0, 1, 0,
+        ]
+    }
+    const matFilter = new egret.ColorMatrixFilter(mat)
+    this.bgimg.filters = [matFilter]
   }
 
   public end() {
@@ -94,10 +119,15 @@ class GamePlayingPanel extends egret.Sprite {
     if (this.timberInterval) {
       clearInterval(this.timberInterval)
     }
+    let random = Math.floor(Math.random() * 20)
+    this.rateOffset = Math.random() < 0.5 ? random : random * -1
+    this.rotations = Math.random() < 0.5 ? this.rotations * -1 : this.rotations
     this.timber.rotation = 0
     this.timberInterval = setInterval(() => {
       this.timber.rotation += this.rotations
-    }, this.rate)
+    }, this.rate - this.rateOffset)
+    
+    this.resetRotateKunai()
   }
 
 	/**
@@ -130,6 +160,7 @@ class GamePlayingPanel extends egret.Sprite {
         if (this.kunaiNum <= 0) {
           this.showNext()
         }
+        this.startAnimation()
       }
     }
     egret.Tween.get(this.kunai)
@@ -198,13 +229,26 @@ class GamePlayingPanel extends egret.Sprite {
     kunai.height = this.kunaiH
     kunai.rotation = kunaiRotate ? kunaiRotate : 0
     this.addChildAt(kunai, this.layerNum - 1)
-    setInterval(() => {
+    const time = setInterval(() => {
       kunai.rotation += this.rotations
-    }, this.rate)
+    }, this.rate - this.rateOffset)
 
-    const obj = { id: rotate, range, kunai }
+    const obj = { id: rotate, range, kunai, time }
+    console.log(obj)
     this.insertRotate.push(obj)
     this.resetKunai()
+  }
+
+  private resetRotateKunai() {
+    this.insertRotate.forEach((item: itemObj) => {
+      if (item.time) {
+        clearInterval(item.time)
+      }
+      const time = setInterval(() => {
+        item.kunai.rotation += this.rotations
+      }, this.rate - this.rateOffset)
+      item.time = time
+    })
   }
 
   private removeRotateKunai(num: number = 3) {
@@ -478,4 +522,5 @@ interface itemObj {
   id: number
   range: number[]
   kunai: egret.Bitmap
+  time: number
 }
