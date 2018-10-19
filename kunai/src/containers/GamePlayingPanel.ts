@@ -73,18 +73,27 @@ class GamePlayingPanel extends egret.Sprite {
     const stageH = stage.stageHeight
 
     this.bgimg = new egret.Bitmap()
-    this.bgimg.texture = RES.getRes('4_jpg')
     this.bgimg.x = 0
     this.bgimg.y = 0
     this.bgimg.width = stageW
     this.bgimg.height = stageH
-    this.bgimg.alpha = .4
     this.addChild(this.bgimg)
 
-    this.timber = this.createBitmapByName('timber_png')
-    this.addChild(this.timber)
-    this.timber.width = 200
-    this.timber.height = 200
+    if (0) {
+      this.bgimg.texture = RES.getRes('2_jpg')
+      this.bgimg.alpha = .7
+      this.timber = this.createBitmapByName('eye_png')
+      this.addChild(this.timber)
+      this.timber.width = 280
+      this.timber.height = 280
+    } else {
+      this.bgimg.texture = RES.getRes('4_jpg')
+      this.bgimg.alpha = .4
+      this.timber = this.createBitmapByName('timber_png')
+      this.addChild(this.timber)
+      this.timber.width = 200
+      this.timber.height = 200
+    }
     this.timber.anchorOffsetX = this.timber.width / 2
     this.timber.anchorOffsetY = this.timber.height / 2
     this.timber.x = stageW / 2
