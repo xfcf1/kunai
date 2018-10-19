@@ -20,7 +20,7 @@ class GameStartPanel extends egret.Sprite {
     logo.x = stage.stageWidth / 2 - logo.width / 2
     logo.y = - logo.height
     egret.Tween.get(logo).to({ y: 60 }, 500, egret.Ease.bounceOut)
-    
+
     startBtn.x = - startBtn.width
     startBtn.y = 400
     startBtn.touchEnabled = true
@@ -30,7 +30,7 @@ class GameStartPanel extends egret.Sprite {
     startPK.x = stage.stageWidth
     startPK.y = 500
     startPK.addEventListener(egret.TouchEvent.TOUCH_TAP, onTouchTap, this)
-    egret.Tween.get(startPK).to({ x: stage.stageWidth / 2 - startPK.width / 2}, 500, egret.Ease.bounceOut)
+    egret.Tween.get(startPK).to({ x: stage.stageWidth / 2 - startPK.width / 2 }, 500, egret.Ease.bounceOut)
     // startPK.addEventListener(egret.TouchEvent.TOUCH_BEGIN, () => {
     //   PK.x = PK.x + 2
     //   PK.y = PK.y + 2
@@ -72,8 +72,8 @@ class GameStartPanel extends egret.Sprite {
     this.startBtn.init(1, '单人闯关')
 
     this.startPK = new Buttons()
-    this.addChild(this.startPK )
-    this.startPK .init(4, '疯狂模式')
+    this.addChild(this.startPK)
+    this.startPK.init(4, '疯狂模式')
 
     // const pk: egret.Bitmap = new egret.Bitmap()
     // pk.texture = RES.getRes('pk_png')
@@ -87,6 +87,7 @@ class GameStartPanel extends egret.Sprite {
     this.bottom = new Bottom()
     this.addChild(this.bottom)
     this.bottom.init()
+    this.bottom.addEventListener(Bottom.FRIENDS_RANK, this.friendsRank, this)
   }
 
   private onTouchTap() {
@@ -98,6 +99,51 @@ class GameStartPanel extends egret.Sprite {
     startBtn.$touchEnabled = false
     if (startBtn.hasEventListener(egret.TouchEvent.TOUCH_TAP)) {
       startBtn.removeEventListener(egret.TouchEvent.TOUCH_TAP, onTouchTap, this)
+    }
+  }
+
+  private bitmap: egret.Bitmap
+  private isdisplay = false
+  private rankingListMask: egret.Shape
+  private btnClose: eui.Button;
+
+  private friendsRank() {
+    console.log(1111)
+    let platform: any = window.platform;
+    if (this.isdisplay) {
+      this.bitmap.parent && this.bitmap.parent.removeChild(this.bitmap);
+      this.rankingListMask.parent && this.rankingListMask.parent.removeChild(this.rankingListMask);
+      this.isdisplay = false;
+      platform.openDataContext.postMessage({
+        isDisplay: this.isdisplay,
+        text: 'hello',
+        year: (new Date()).getFullYear(),
+        command: "close"
+      });
+    } else {
+      //处理遮罩，避免开放数据域事件影响主域。
+      this.rankingListMask = new egret.Shape();
+      this.rankingListMask.graphics.beginFill(0x000000, 1);
+      this.rankingListMask.graphics.drawRect(0, 0, this.stage.width, this.stage.height);
+      this.rankingListMask.graphics.endFill();
+      this.rankingListMask.alpha = 0.5;
+      this.rankingListMask.touchEnabled = true;
+      this.addChild(this.rankingListMask);
+
+      //简单实现，打开这关闭使用一个按钮。
+      // this.addChild(this.btnClose);
+      //主要示例代码开始
+      this.bitmap = platform.openDataContext.createDisplayObject(null, this.stage.stageWidth, this.stage.stageHeight);
+      this.addChild(this.bitmap);
+      //主域向子域发送自定义消息
+      platform.openDataContext.postMessage({
+        isDisplay: this.isdisplay,
+        text: 'hello',
+        year: (new Date()).getFullYear(),
+        command: "open"
+      });
+      //主要示例代码结束            
+      this.isdisplay = true;
     }
   }
 }

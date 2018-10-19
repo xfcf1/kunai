@@ -7,6 +7,10 @@ class Bottom extends egret.Sprite {
     super()
   }
 
+  public static FRIENDS_RANK = 'friendsrank'
+  public static GROUP_RANK = 'grouprank'
+  public static WORLD_RANK = 'worldrank'
+  public static SKIN = 'skin'
   public height: number = 100
   private _width: number = 1000
   private bg: egret.Shape
@@ -26,6 +30,10 @@ class Bottom extends egret.Sprite {
     b1.x = 30
     b1.y = 20
     this.addChild(b1)
+    b1.touchEnabled = true
+    b1.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
+      this.dispatchEventWith(Bottom.FRIENDS_RANK)
+    }, this)
 
     const t1: egret.TextField = new egret.TextField()
     t1.text = '好友排行'
@@ -34,6 +42,10 @@ class Bottom extends egret.Sprite {
     t1.x = 20
     t1.y = 60
     this.addChild(t1)
+    t1.touchEnabled = true
+    t1.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
+      this.dispatchEventWith(Bottom.FRIENDS_RANK)
+    }, this)
 
     const b2: egret.Bitmap = new egret.Bitmap()
     b2.texture = RES.getRes('b2_png')

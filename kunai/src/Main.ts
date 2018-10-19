@@ -61,7 +61,7 @@ class Main extends eui.UILayer {
     // const data = await platform.login()
     // console.log(111, data)
     // const userInfo = await platform.getUserInfo()
-    
+    platform.openDataContext.postMessage({command:'loadRes'})
   }
 
   private async loadResource() {

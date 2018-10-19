@@ -13,6 +13,7 @@ declare interface Platform {
   getData(data: any, func?: any): Promise<any>
   removeData(data: any, func?: any): Promise<any>
   clearData(func?: any): Promise<any>
+  openDataContext
 }
 
 class DebugPlatform implements Platform {
@@ -34,6 +35,7 @@ class DebugPlatform implements Platform {
   async clearData(func: any) {
     return func && func()
   }
+  openDataContext
 }
 
 
