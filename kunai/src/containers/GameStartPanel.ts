@@ -88,6 +88,17 @@ class GameStartPanel extends egret.Sprite {
     this.addChild(this.bottom)
     this.bottom.init()
     this.bottom.addEventListener(Bottom.FRIENDS_RANK, this.friendsRank, this)
+
+
+    this.btnClose = new egret.Shape;
+    this.btnClose.graphics.beginFill(0xff0000, 1)
+    this.btnClose.graphics.drawCircle(egret.MainContext.instance.stage.stageWidth - 50, 80, 20)
+    this.btnClose.graphics.endFill()
+    this.btnClose.touchEnabled = true
+    this.btnClose.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
+      this.friendsRank()
+      this.removeChild(this.btnClose)
+    }, this);
   }
 
   private onTouchTap() {
@@ -105,10 +116,9 @@ class GameStartPanel extends egret.Sprite {
   private bitmap: egret.Bitmap
   private isdisplay = false
   private rankingListMask: egret.Shape
-  private btnClose: eui.Button;
+  private btnClose: egret.Shape;
 
   private friendsRank() {
-    console.log(1111)
     let platform: any = window.platform;
     if (this.isdisplay) {
       this.bitmap.parent && this.bitmap.parent.removeChild(this.bitmap);
@@ -130,11 +140,11 @@ class GameStartPanel extends egret.Sprite {
       this.rankingListMask.touchEnabled = true;
       this.addChild(this.rankingListMask);
 
-      //简单实现，打开这关闭使用一个按钮。
-      // this.addChild(this.btnClose);
       //主要示例代码开始
       this.bitmap = platform.openDataContext.createDisplayObject(null, this.stage.stageWidth, this.stage.stageHeight);
       this.addChild(this.bitmap);
+      //简单实现，打开这关闭使用一个按钮。
+      this.addChild(this.btnClose);
       //主域向子域发送自定义消息
       platform.openDataContext.postMessage({
         isDisplay: this.isdisplay,

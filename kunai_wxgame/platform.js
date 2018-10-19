@@ -43,6 +43,15 @@ class WxgamePlatform {
     })
   }
 
+  removeUserCloudStorage(ary) {
+    wx.setUserCloudStorage({
+      keyList: ary,
+      success: function (res) {
+        console.log(res)
+      }
+    })
+  }
+
   share(func) {
     wx.shareAppMessage()
     return func && func()

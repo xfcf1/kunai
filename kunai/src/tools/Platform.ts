@@ -8,6 +8,7 @@ declare interface Platform {
   getUserInfo(): Promise<any>
   login(): Promise<any>
   setUserCloudStorage(obj: any): Promise<any>
+  removeUserCloudStorage(ary: string[]): Promise<any>
   share(func?: any): Promise<any>
   setData(data: any, func?: any): Promise<any>
   getData(data: any, func?: any): Promise<any>
@@ -20,6 +21,7 @@ class DebugPlatform implements Platform {
   async getUserInfo() {}
   async login() {}
   async setUserCloudStorage(obj: any) {}
+  async removeUserCloudStorage(ary: string[]) {}
   async share(func?: any) {
     return func && func()
   }

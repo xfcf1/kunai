@@ -53,97 +53,7 @@ const totalGroup = [{
     name: "1111111111",
     url: assets.icon,
     scroes: 10000
-  },
-  {
-    key: 2,
-    name: "2222222222",
-    url: assets.icon,
-    scroes: 9000
-  },
-  {
-    key: 3,
-    name: "3333333",
-    url: assets.icon,
-    scroes: 8000
-  },
-  {
-    key: 4,
-    name: "4444444",
-    url: assets.icon,
-    scroes: 7000
-  },
-  {
-    key: 5,
-    name: "55555555",
-    url: assets.icon,
-    scroes: 6000
-  },
-  {
-    key: 6,
-    name: "6666666",
-    url: assets.icon,
-    scroes: 5000
-  },
-  {
-    key: 7,
-    name: "7777777",
-    url: assets.icon,
-    scroes: 4000
-  },
-  {
-    key: 8,
-    name: "8888888",
-    url: assets.icon,
-    scroes: 3000
-  },
-  {
-    key: 9,
-    name: "9999999",
-    url: assets.icon,
-    scroes: 2000
-  },
-  {
-    key: 10,
-    name: "1010101010",
-    url: assets.icon,
-    scroes: 2000
-  },
-  {
-    key: 11,
-    name: "111111111111",
-    url: assets.icon,
-    scroes: 2000
-  },
-  {
-    key: 12,
-    name: "121212121212",
-    url: assets.icon,
-    scroes: 2000
-  },
-  {
-    key: 13,
-    name: "13131313",
-    url: assets.icon,
-    scroes: 2000
-  },
-  {
-    key: 14,
-    name: "1414141414",
-    url: assets.icon,
-    scroes: 2000
-  },
-  {
-    key: 15,
-    name: "1515151515",
-    url: assets.icon,
-    scroes: 2000
-  },
-  {
-    key: 16,
-    name: "1616161616",
-    url: assets.icon,
-    scroes: 2000
-  },
+  }
 ];
 
 /**
@@ -162,11 +72,38 @@ function drawRankPanel() {
 
   //起始id
   const startID = perPageMaxNum * page;
-  currentGroup = totalGroup.slice(startID, startID + perPageMaxNum);
-  //创建头像Bar
-  drawRankByGroup(currentGroup);
-  //创建按钮
-  drawButton()
+  wx.getFriendCloudStorage({
+    keyList: ['score'],
+    success: function (res) {
+      console.log(res)
+      if (!res.data || !res.data.length) return
+      const len = res.data.length
+      const ary = []
+      for (let i = 0; i < len; i++) {
+        const obj = {}
+        const item = res.data[i]
+        obj.name = item.nickname
+        obj.url = item.avatarUrl
+        obj.key = i
+        const kvLen = item.KVDataList.length
+        for (let j = 0; j < kvLen; j++) {
+          const kv = item.KVDataList[j]
+          if (kv.key === 'score') {
+            obj.scroes = kv.value
+            break
+          }
+        }
+        ary.push(obj)
+      }
+
+      currentGroup = ary.slice(startID, startID + perPageMaxNum);
+      //创建头像Bar
+      drawRankByGroup(currentGroup);
+      //创建按钮
+      drawButton()
+    }
+  })
+
 }
 /**
  * 根据屏幕大小初始化所有绘制数据
@@ -205,8 +142,8 @@ function init() {
  * 创建两个点击按钮
  */
 function drawButton() {
-  context_drawImage(assets.button, nextButtonX, nextButtonY, buttonWidth, buttonHeight);
-  context_drawImage(assets.button, lastButtonX, lastButtonY, buttonWidth, buttonHeight);
+  context.fillText('下一页', nextButtonX, nextButtonY, buttonWidth, buttonHeight);
+  context.fillText('上一页', lastButtonX, lastButtonY, buttonWidth, buttonHeight);
 }
 
 
@@ -226,7 +163,7 @@ function drawRankByGroup(currentGroup) {
 function drawByData(data, i) {
   let x = startX;
   //绘制底框
-  context_drawImage(assets.box, startX, startY + i * preOffsetY, barWidth, barHeight);
+  // context_drawImage(assets.box, startX, startY + i * preOffsetY, barWidth, barHeight);
   x += 10;
   //设置字体
   context.font = fontSize + "px Arial";
