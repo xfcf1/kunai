@@ -133,10 +133,26 @@ class GamePlayingPanel extends egret.Sprite {
     }, this.rate - this.rateOffset)
   }
 
+  // 关卡加强
   private resetAnimation(): void {
-    let random = Math.floor(Math.random() * 20)
-    this.rateOffset = Math.random() < 0.5 ? random : random * -1
-    this.rotations = Math.random() < 0.5 ? this.rotations * -1 : this.rotations
+    if (this.mode === 1) {
+    let random = Math.floor(Math.random() * this.level)
+      // 改变速度
+      this.rateOffset = Math.random() < 0.2 ? random : random * -1
+      // 改变方向
+      this.rotations = Math.random() < 0.1 ? this.rotations * -1 : this.rotations
+    } else if (this.mode === 2) {
+      // 疯狂模式下每关增加速度
+      this.rateOffset = this.level * 1.2
+    }
+
+    if (this.timberInterval) {
+      clearInterval(this.timberInterval)
+    }
+    this.timberInterval = setInterval(() => {
+      this.timber.rotation += this.rotations
+    }, this.rate - this.rateOffset)
+
     this.resetRotateKunai()
   }
 
@@ -170,7 +186,7 @@ class GamePlayingPanel extends egret.Sprite {
         if (this.kunaiNum <= 0) {
           this.showNext()
         }
-        // this.startAnimation()
+        this.resetAnimation()
       }
     }
     egret.Tween.get(this.kunai)
@@ -254,7 +270,6 @@ class GamePlayingPanel extends egret.Sprite {
       if (item.time) {
         clearInterval(item.time)
       }
-      item.id = this.timber.rotation
       const time = setInterval(() => {
         item.kunai.rotation += this.rotations
       }, this.rate - this.rateOffset)
@@ -386,20 +401,35 @@ class GamePlayingPanel extends egret.Sprite {
 
   private goNext() {
     this.level += 1
-    this.kunaiNum = 9
-    this.updateKunaiNum()
-    this.updateLevel()
+    this.kunaiNum = 9 + Math.floor(this.level / 10 - 1)
     this.cleanBitmap()
     this.createRandomKunai()
+    this.updateKunaiNum()
+    this.updateLevel()
   }
 
   // 随机生成的苦无
   private createRandomKunai() {
-    // 每加一关，已插入的苦无多一把
-    for (let i = 1; i < this.level; i++) {
-      let random = Math.floor(Math.random() * 180)
-      random = Math.random() < .5 ? random * -1 : random
-      this.createRotateKunai(random)
+    if (this.level !== 1) {
+      if (this.mode === 1) {
+        // 简单模式，每关随机增减苦无
+        const random = Math.floor(Math.random() * this.level)
+        if (random >= this.level / 2) {
+          this.kunaiNum = this.kunaiNum - Math.floor(Math.random() * this.level / 2 + 1)
+        }
+        for (let i = 1; i < random; i++) {
+          let r = Math.floor(Math.random() * 180)
+          r = Math.random() < .5 ? r * -1 : r
+          this.createRotateKunai(r)
+        }
+      } else if (this.mode === 2) {
+        // 疯狂模式每加一关，已插入的苦无多一把
+        for (let i = 1; i < this.level; i++) {
+          let random = Math.floor(Math.random() * 180)
+          random = Math.random() < .5 ? random * -1 : random
+          this.createRotateKunai(random)
+        }
+      }
     }
     this.startAnimation()
   }
@@ -450,11 +480,11 @@ class GamePlayingPanel extends egret.Sprite {
     this.closeDialog()
     this.level = 1
     this.kunaiNum = 9
+    this.cleanBitmap()
+    this.createRandomKunai()
     this.updateKunaiNum()
     this.updateLevel()
-    this.cleanBitmap()
     this.resetKunai()
-    this.createRandomKunai()
     this.updateScores(0)
   }
 
@@ -525,6 +555,7 @@ class GamePlayingPanel extends egret.Sprite {
     msg.init('一天只有三次复活机会哦')
   }
 }
+
 
 interface itemObj {
   id: number
