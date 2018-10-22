@@ -35,7 +35,6 @@ class GamePlayingPanel extends egret.Sprite {
     // mode1：简单
     // mode2：疯狂
     this.mode = mode
-    this.startAnimation()
 
     let mat
     if (this.mode === 1) {
@@ -128,14 +127,16 @@ class GamePlayingPanel extends egret.Sprite {
     if (this.timberInterval) {
       clearInterval(this.timberInterval)
     }
-    let random = Math.floor(Math.random() * 20)
-    this.rateOffset = Math.random() < 0.5 ? random : random * -1
-    this.rotations = Math.random() < 0.5 ? this.rotations * -1 : this.rotations
     this.timber.rotation = 0
     this.timberInterval = setInterval(() => {
       this.timber.rotation += this.rotations
     }, this.rate - this.rateOffset)
-    
+  }
+
+  private resetAnimation(): void {
+    let random = Math.floor(Math.random() * 20)
+    this.rateOffset = Math.random() < 0.5 ? random : random * -1
+    this.rotations = Math.random() < 0.5 ? this.rotations * -1 : this.rotations
     this.resetRotateKunai()
   }
 
@@ -169,7 +170,7 @@ class GamePlayingPanel extends egret.Sprite {
         if (this.kunaiNum <= 0) {
           this.showNext()
         }
-        this.startAnimation()
+        // this.startAnimation()
       }
     }
     egret.Tween.get(this.kunai)
@@ -221,9 +222,8 @@ class GamePlayingPanel extends egret.Sprite {
   private createRotateKunai(kunaiRotate?: number) {
     // 数据存储木桩上的苦无坐标
     // 有kunaiRotate则是随机生成的苦无
-    // 如果是用kunaiRotate做判断需要乘以-1
     const { stage } = egret.MainContext.instance
-    const rotate = kunaiRotate ? kunaiRotate * -1 : this.timber.rotation
+    const rotate = typeof kunaiRotate === 'number' ? kunaiRotate : this.timber.rotation
     const range = []
     range.push(rotate - 10)
     range.push(rotate + 10)
@@ -236,23 +236,25 @@ class GamePlayingPanel extends egret.Sprite {
     kunai.y = 230
     kunai.width = this.kunaiW
     kunai.height = this.kunaiH
-    kunai.rotation = kunaiRotate ? kunaiRotate : 0
+    // 如果是用kunaiRotate做判断需要乘以-1
+    kunai.rotation = typeof kunaiRotate === 'number' ? -kunaiRotate : 0
     this.addChildAt(kunai, this.layerNum - 1)
     const time = setInterval(() => {
       kunai.rotation += this.rotations
     }, this.rate - this.rateOffset)
 
-    const obj = { id: rotate, range, kunai, time }
-    console.log(obj)
+    const obj = { id: this.timber.rotation, range, kunai, time }
     this.insertRotate.push(obj)
     this.resetKunai()
   }
 
+  // 重设苦无动画
   private resetRotateKunai() {
     this.insertRotate.forEach((item: itemObj) => {
       if (item.time) {
         clearInterval(item.time)
       }
+      item.id = this.timber.rotation
       const time = setInterval(() => {
         item.kunai.rotation += this.rotations
       }, this.rate - this.rateOffset)
@@ -389,8 +391,6 @@ class GamePlayingPanel extends egret.Sprite {
     this.updateLevel()
     this.cleanBitmap()
     this.createRandomKunai()
-    // 重置木桩的角度并开始动画
-    this.startAnimation()
   }
 
   // 随机生成的苦无
@@ -401,6 +401,7 @@ class GamePlayingPanel extends egret.Sprite {
       random = Math.random() < .5 ? random * -1 : random
       this.createRotateKunai(random)
     }
+    this.startAnimation()
   }
 
   private async showDialog() {
@@ -455,8 +456,6 @@ class GamePlayingPanel extends egret.Sprite {
     this.resetKunai()
     this.createRandomKunai()
     this.updateScores(0)
-    // 重置木桩的角度并开始动画
-    this.startAnimation()
   }
 
   private cleanBitmap() {
