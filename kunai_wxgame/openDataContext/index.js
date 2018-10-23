@@ -170,14 +170,31 @@ function drawByData(data, i) {
   //绘制序号
   context.fillText(data.key + "", x, startY + i * preOffsetY + textOffsetY, textMaxSize);
   x += indexWidth + intervalX;
-  //绘制头像
-  context_drawImage(assets.icon, x, startY + i * preOffsetY + (barHeight - avatarSize) / 2, avatarSize, avatarSize);
-  x += avatarSize + intervalX;
-  //绘制名称
-  context.fillText(data.name + "", x, startY + i * preOffsetY + textOffsetY, textMaxSize);
-  x += textMaxSize + intervalX;
-  //绘制分数
-  context.fillText(data.scroes + "", x, startY + i * preOffsetY + textOffsetY, textMaxSize);
+
+  console.log(data)
+  if (data.url) {
+    var imgObj = wx.createImage()
+    imgObj.src = data.url
+    imgObj.onload = function (e) {
+      //绘制头像
+      context_drawImage(imgObj, x, startY + i * preOffsetY + (barHeight - avatarSize) / 2, avatarSize, avatarSize);
+      x += avatarSize + intervalX;
+      //绘制名称
+      context.fillText(data.name + "", x, startY + i * preOffsetY + textOffsetY, textMaxSize);
+      x += textMaxSize + intervalX;
+      //绘制分数
+      context.fillText(data.scroes + "", x, startY + i * preOffsetY + textOffsetY, textMaxSize);
+    }
+  } else {
+    //绘制头像
+    context_drawImage(assets.icon, x, startY + i * preOffsetY + (barHeight - avatarSize) / 2, avatarSize, avatarSize);
+    x += avatarSize + intervalX;
+    //绘制名称
+    context.fillText(data.name + "", x, startY + i * preOffsetY + textOffsetY, textMaxSize);
+    x += textMaxSize + intervalX;
+    //绘制分数
+    context.fillText(data.scroes + "", x, startY + i * preOffsetY + textOffsetY, textMaxSize);
+  }
 }
 
 /**

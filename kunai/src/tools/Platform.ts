@@ -18,7 +18,12 @@ declare interface Platform {
 }
 
 class DebugPlatform implements Platform {
-  async getUserInfo() {}
+  async getUserInfo() {
+    return {
+      nickName: '悠悠丶',
+      avatarUrl: 'https://wx.qlogo.cn/mmopen/vi_32/PiajxSqBRaEKT3CKZgvyic14bBOYKpbaS2PvaS7t1ar4295xuV4w8xArEF8kuxWpzFicgADibw2c2XdWjasfzvDib5Q/132'
+    }
+  }
   async login() {}
   async setUserCloudStorage(obj: any) {}
   async removeUserCloudStorage(ary: string[]) {}

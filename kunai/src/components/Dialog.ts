@@ -23,7 +23,7 @@ class Dialog extends egret.Sprite {
   private adBtn: Buttons
   private scores: egret.TextField
 
-  private init () {
+  private async init () {
     let { maskBlack, tip, homeBtn, restartBtn, shareBtn, adBtn } = this
     maskBlack = new egret.Shape()
     maskBlack.graphics.beginFill(0x000000, .8)
@@ -107,6 +107,29 @@ class Dialog extends egret.Sprite {
     this.scores.y = 40
     this.scores.x = this._width / 2 -this.scores.width / 2
     this.addChild(this.scores)
+    const data = await platform.getUserInfo()
+    const that = this
+    const url = data.avatarUrl
+    // const imgLoader = new egret.ImageLoader()
+    // imgLoader.crossOrigin = 'anonymous'
+    // imgLoader.load(url + '.jpg')
+    // imgLoader.once(egret.Event.COMPLETE, (e: egret.Event) => {
+    //   if (e.currentTarget.data) {
+    //     console.log(e.currentTarget.data)
+    //     const texture = new egret.Texture()
+    //     texture.bitmapData = e.currentTarget.data
+    //     const img = new egret.Bitmap(texture)
+    //     img.width = 100
+    //     img.height = 100
+    //     that.addChild(img)
+    //   }
+    // }, this)
+
+    const img = new eui.Image()
+    img.source = url
+    img.width = 100
+    img.height = 100
+    that.addChild(img)
   }
 
   public setScores(text: string) {
