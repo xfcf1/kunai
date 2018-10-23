@@ -16,6 +16,10 @@ class WxgamePlatform {
     })
   }
 
+  scopeUserInfo() {
+    wx.authorize({ scope: 'scope.userInfo' })
+  }
+
   getUserInfo() {
     return new Promise((resolve, reject) => {
       wx.getUserInfo({

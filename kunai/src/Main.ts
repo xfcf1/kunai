@@ -95,6 +95,7 @@ class Main extends eui.UILayer {
 	 * Create scene interface
 	 */
   protected createGameScene(): void {
+    platform.scopeUserInfo()
     const { stage } = this
     const bg = new egret.Shape()
     bg.graphics.beginGradientFill(egret.GradientType.RADIAL, [0xf6dba4, 0xfcf0d6], [1, 1], [150, 50], new egret.Matrix())
