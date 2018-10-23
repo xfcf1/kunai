@@ -3,8 +3,9 @@ class TimberMaskSprite extends egret.Sprite {
     super()
   }
 
-  public createMask(r: number, startAngle: number, endAngle: number) {
-    const t: egret.Bitmap = new egret.Bitmap(RES.getRes('timber_png'))
+  public createMask(r: number, startAngle: number, endAngle: number, skin: number) {
+    const img = skin === 1 ? 'timber_png' : 'eye_png'
+    const t: egret.Bitmap = new egret.Bitmap(RES.getRes(img))
     t.width = r * 2
     t.height = r * 2
     this.addChild(t)

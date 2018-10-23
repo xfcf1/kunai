@@ -3,6 +3,7 @@ class GamePlayingPanel extends egret.Sprite {
   public static GAME_RESTART: string = 'gamerestart'
 
   private mode: number = 1
+  private skin: number = 1
   private bgimg: egret.Bitmap
   private textfield: egret.TextField;
   private timber: egret.Bitmap
@@ -80,20 +81,20 @@ class GamePlayingPanel extends egret.Sprite {
     this.bgimg.height = stageH
     this.addChild(this.bgimg)
 
-    if (0) {
-      this.bgimg.texture = RES.getRes('2_jpg')
-      this.bgimg.alpha = .7
-      this.timber = this.createBitmapByName('eye_png')
-      this.addChild(this.timber)
-      this.timber.width = 280
-      this.timber.height = 280
-    } else {
+    if (this.skin === 1) {
       this.bgimg.texture = RES.getRes('4_jpg')
       this.bgimg.alpha = .4
       this.timber = this.createBitmapByName('timber_png')
       this.addChild(this.timber)
       this.timber.width = 200
       this.timber.height = 200
+    } else if (this.skin === 2) {
+      this.bgimg.texture = RES.getRes('2_jpg')
+      this.bgimg.alpha = .7
+      this.timber = this.createBitmapByName('eye_png')
+      this.addChild(this.timber)
+      this.timber.width = 280
+      this.timber.height = 280
     }
     this.timber.anchorOffsetX = this.timber.width / 2
     this.timber.anchorOffsetY = this.timber.height / 2
@@ -142,7 +143,7 @@ class GamePlayingPanel extends egret.Sprite {
       // 改变速度
       this.rateOffset = Math.random() < 0.2 ? random : random * -1
       // 改变方向
-      this.rotations = Math.random() < 0.1 ? this.rotations * -1 : this.rotations
+      this.rotations = this.level % 3 === 0 && Math.random() < 0.1 ? this.rotations * -1 : this.rotations
     } else if (this.mode === 2) {
       // 疯狂模式下每关增加速度
       this.rateOffset = this.level * 1.2
@@ -453,6 +454,9 @@ class GamePlayingPanel extends egret.Sprite {
   private goNext() {
     this.level += 1
     this.kunaiNum = 9 + Math.floor(this.level / 10 - 1)
+    if(this.kunaiNum <=0 ) {
+      this.kunaiNum = 1
+    }
     this.cleanBitmap()
     this.createRandomKunai()
     this.updateKunaiNum()
@@ -610,6 +614,7 @@ class GamePlayingPanel extends egret.Sprite {
   private masks() {
     const { stage } = this
     this.timberMask = new TimberMask()
+    this.timberMask.init(this.skin)
     this.addChild(this.timberMask)
     this.timberMask.x = stage.stageWidth / 2 - this.timberMask.width / 2
     this.timberMask.y = 130

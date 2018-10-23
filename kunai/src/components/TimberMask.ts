@@ -1,11 +1,10 @@
 class TimberMask extends egret.Sprite {
   constructor() {
     super()
-    this.init()
   }
   private ary: TimberMaskSprite[] = []
 
-  private init() {
+  public init(skin: number) {
     const randomAry =  [0, 360]
     randomAry.push(Tools.generateRandom(10, 350))
     randomAry.push(Tools.generateRandom(10, 350))
@@ -19,7 +18,7 @@ class TimberMask extends egret.Sprite {
       const startAngle = randomAry[i]
       const endAngle = next > randomAry.length ? 360 : randomAry[next]
       const m:TimberMaskSprite = new TimberMaskSprite()
-      m.createMask(r, startAngle, endAngle)
+      m.createMask(r, startAngle, endAngle, skin)
       this.addChild(m)
       this.ary.push(m)
     }
