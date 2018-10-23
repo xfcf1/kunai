@@ -15,6 +15,7 @@ declare interface Platform {
   getData(data: any, func?: any): Promise<any>
   removeData(data: any, func?: any): Promise<any>
   clearData(func?: any): Promise<any>
+  openMini(obj: any): Promise<any>
   openDataContext
 }
 
@@ -45,6 +46,7 @@ class DebugPlatform implements Platform {
     return func && func()
   }
   openDataContext
+  async openMini(obj: any) {}
 }
 
 

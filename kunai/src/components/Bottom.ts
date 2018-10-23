@@ -11,6 +11,7 @@ class Bottom extends egret.Sprite {
   public static GROUP_RANK = 'grouprank'
   public static WORLD_RANK = 'worldrank'
   public static SKIN = 'skin'
+  public static ZAN = 'ZAN'
   public height: number = 100
   private _width: number = 1000
   private bg: egret.Shape
@@ -64,7 +65,7 @@ class Bottom extends egret.Sprite {
     this.addChild(t2)
 
     const b3: egret.Bitmap = new egret.Bitmap()
-    b3.texture = RES.getRes('b3_png')
+    b3.texture = RES.getRes('b4_png')
     b3.width = 51 * .5
     b3.height = 51 * .5
     b3.x = 230
@@ -72,28 +73,42 @@ class Bottom extends egret.Sprite {
     this.addChild(b3)
 
     const t3: egret.TextField = new egret.TextField()
-    t3.text = '世界排行'
+    t3.text = '皮肤'
     t3.size = 12
     t3.textColor = 0xffffff
-    t3.x = 220
+    t3.x = 232
     t3.y = 60
     this.addChild(t3)
 
+    const miniObj = {
+      appId: 'wx9042a3fe52d33aba',
+      path: 'pages/apps/largess/detail?id=waQKNtmC5mk%3D'
+    }
     const b4: egret.Bitmap = new egret.Bitmap()
-    b4.texture = RES.getRes('b4_png')
+    b4.texture = RES.getRes('like_png')
     b4.width = 60 * .5
     b4.height = 58 * .5
     b4.x = 330
     b4.y = 20
     this.addChild(b4)
+    b4.touchEnabled = true
+    b4.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
+      this.dispatchEventWith(Bottom.ZAN)
+      platform.openMini(miniObj)
+    }, this)
 
     const t4: egret.TextField = new egret.TextField()
-    t4.text = '皮肤'
+    t4.text = '给攒'
     t4.size = 12
     t4.textColor = 0xffffff
     t4.x = 333
     t4.y = 60
     this.addChild(t4)
-    
+    t4.touchEnabled = true
+    t4.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
+      this.dispatchEventWith(Bottom.ZAN)
+      platform.openMini(miniObj)
+    }, this)
+
   }
 }

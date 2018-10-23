@@ -57,6 +57,7 @@ class GameStartPanel extends egret.Sprite {
   }
 
   private init() {
+    const { stage } = egret.MainContext.instance
     const img = new egret.Bitmap()
     img.texture = RES.getRes('1_jpg')
     img.x = 0

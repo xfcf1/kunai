@@ -96,6 +96,9 @@ class WxgamePlatform {
       }
     })
   }
+  openMini(obj) {
+    wx.navigateToMiniProgram(obj)
+  }
 
   openDataContext = new WxgameOpenDataContext();
 }
