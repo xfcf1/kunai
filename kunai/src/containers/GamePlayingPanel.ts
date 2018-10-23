@@ -11,6 +11,7 @@ class GamePlayingPanel extends egret.Sprite {
   protected rotations: number = 3
   private isShooting: boolean = false
   private insertRotate: itemObj[] = []
+  private insertRotateNoAnimate: egret.Bitmap[] = []
   protected kunaiW: number = 21
   protected kunaiH: number = 100
   protected rate: number = 35
@@ -20,6 +21,7 @@ class GamePlayingPanel extends egret.Sprite {
   private s2: egret.Bitmap
   private layerNum: number
   private scores: egret.TextField
+  private timberMask: TimberMask
 
   // 关数限定
   private kunaiNum: number = 9
@@ -178,15 +180,20 @@ class GamePlayingPanel extends egret.Sprite {
         egret.Tween.get(this.timber)
           .to({ x: this.timber.x - 6, y: this.timber.y - 7 }, 20, egret.Ease.bounceInOut)
           .to({ x: timberX, y: timberY }, 20, egret.Ease.bounceInOut)
-
+          .call(() => {
+            // 判断及动画完成以后进行游戏判断
+            if (this.kunaiNum <= 0) {
+              this.showNext()
+            } else {
+              this.resetKunai()
+            }
+            this.resetAnimation()
+          }, this)
+        
+        this.kunai.alpha = 0
         this.createRotateKunai()
         this.updateScores()
 
-        // 判断及动画完成以后进行游戏判断
-        if (this.kunaiNum <= 0) {
-          this.showNext()
-        }
-        this.resetAnimation()
       }
     }
     egret.Tween.get(this.kunai)
@@ -231,6 +238,7 @@ class GamePlayingPanel extends egret.Sprite {
     this.kunai.rotation = 0
     this.kunai.x = stageW / 2 - 10
     this.kunai.y = stageH - 170
+    this.kunai.alpha = 1
 
     this.isShooting = false
   }
@@ -255,13 +263,32 @@ class GamePlayingPanel extends egret.Sprite {
     // 如果是用kunaiRotate做判断需要乘以-1
     kunai.rotation = typeof kunaiRotate === 'number' ? -kunaiRotate : 0
     this.addChildAt(kunai, this.layerNum - 1)
-    const time = setInterval(() => {
+    const time: number = setInterval(() => {
       kunai.rotation += this.rotations
     }, this.rate - this.rateOffset)
 
     const obj = { id: this.timber.rotation, range, kunai, time }
     this.insertRotate.push(obj)
-    this.resetKunai()
+
+  }
+
+  private createRotateKunaiNoAnimate(rotate: number) {
+    // 生成无动画的苦无
+    const { stage } = egret.MainContext.instance 
+
+    // 生成木桩上的苦无
+    const kunai: egret.Bitmap = this.createBitmapByName('kunai_png')
+    kunai.anchorOffsetX = 5
+    kunai.anchorOffsetY = -52
+    kunai.x = stage.stageWidth / 2
+    kunai.y = 230
+    kunai.width = this.kunaiW
+    kunai.height = this.kunaiH
+    // 如果是用kunaiRotate做判断需要乘以-1
+    kunai.rotation = - rotate
+    this.addChildAt(kunai, this.layerNum - 1)
+
+    this.insertRotateNoAnimate.push(kunai)
   }
 
   // 重设苦无动画
@@ -394,9 +421,33 @@ class GamePlayingPanel extends egret.Sprite {
 
   // 下一关
   private showNext() {
+    this.timber.alpha = 0
+    this.masks()
+    this.timberMask.startAnimation()
+    const ary: number[] = []
+    this.insertRotate.forEach((item: itemObj) => {
+      if (item.time) {
+        clearInterval(item.time)
+      }
+      item.kunai.parent.removeChild(item.kunai)
+      ary.push(item.id)
+      // item.kunai.x = item.kunai.x + Tools.generateRandom(10, 30)
+      // item.kunai.y = item.kunai.y + Tools.generateRandom(10, 30)
+      // egret.Tween.get(item.kunai).to({ y: this.stage.stageHeight }, 1000)
+    })
+    this.insertRotate = []
+    ary.forEach((rotate: number) => {
+      this.createRotateKunaiNoAnimate(rotate)
+    })
+    this.insertRotateNoAnimate.forEach((item: egret.Bitmap) => {
+      item.rotation = Tools.generateRandom(-180, 180)
+      egret.Tween.get(item).to({x: Tools.generateRandom(-this.stage.stageWidth, this.stage.stageWidth), y: this.stage.stageHeight + item.height * 2 }, 1000)
+    })
+
     setTimeout(() => {
+      this.timber.alpha = 1
       this.goNext()
-    }, 300)
+    }, 1100)
   }
 
   private goNext() {
@@ -406,6 +457,7 @@ class GamePlayingPanel extends egret.Sprite {
     this.createRandomKunai()
     this.updateKunaiNum()
     this.updateLevel()
+    this.resetKunai()
   }
 
   // 随机生成的苦无
@@ -553,6 +605,14 @@ class GamePlayingPanel extends egret.Sprite {
     const msg: Msg = new Msg()
     this.addChild(msg)
     msg.init('一天只有三次复活机会哦')
+  }
+
+  private masks() {
+    const { stage } = this
+    this.timberMask = new TimberMask()
+    this.addChild(this.timberMask)
+    this.timberMask.x = stage.stageWidth / 2 - this.timberMask.width / 2
+    this.timberMask.y = 130
   }
 }
 
