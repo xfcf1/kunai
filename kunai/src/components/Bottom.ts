@@ -55,6 +55,10 @@ class Bottom extends egret.Sprite {
     b2.x = 130
     b2.y = 20
     this.addChild(b2)
+    b2.touchEnabled = true
+    b2.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
+      this.dispatchEventWith(Bottom.FRIENDS_RANK)
+    }, this)
 
     const t2: egret.TextField = new egret.TextField()
     t2.text = '群内排行'
@@ -63,31 +67,43 @@ class Bottom extends egret.Sprite {
     t2.x = 120
     t2.y = 60
     this.addChild(t2)
+    t2.touchEnabled = true
+    t2.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
+      this.dispatchEventWith(Bottom.FRIENDS_RANK)
+    }, this)
 
     const b3: egret.Bitmap = new egret.Bitmap()
     b3.texture = RES.getRes('b4_png')
-    b3.width = 51 * .5
-    b3.height = 51 * .5
+    b3.width = 60 * .5
+    b3.height = 48 * .5
     b3.x = 230
     b3.y = 20
     this.addChild(b3)
+    b3.touchEnabled = true
+    b3.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
+      this.dispatchEventWith(Bottom.SKIN)
+    }, this)
 
     const t3: egret.TextField = new egret.TextField()
     t3.text = '皮肤'
     t3.size = 12
     t3.textColor = 0xffffff
-    t3.x = 232
+    t3.x = 235
     t3.y = 60
     this.addChild(t3)
+    t3.touchEnabled = true
+    t3.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
+      this.dispatchEventWith(Bottom.SKIN)
+    }, this)
 
     const miniObj = {
-      appId: 'wx9042a3fe52d33aba',
+      appId: 'wx18a2ac992306a5a4',
       path: 'pages/apps/largess/detail?id=waQKNtmC5mk%3D'
     }
     const b4: egret.Bitmap = new egret.Bitmap()
     b4.texture = RES.getRes('like_png')
-    b4.width = 60 * .5
-    b4.height = 58 * .5
+    b4.width = 70 * .4
+    b4.height = 65 * .4
     b4.x = 330
     b4.y = 20
     this.addChild(b4)
@@ -101,7 +117,7 @@ class Bottom extends egret.Sprite {
     t4.text = '给攒'
     t4.size = 12
     t4.textColor = 0xffffff
-    t4.x = 333
+    t4.x = 331
     t4.y = 60
     this.addChild(t4)
     t4.touchEnabled = true

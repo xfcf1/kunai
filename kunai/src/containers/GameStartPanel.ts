@@ -94,6 +94,7 @@ class GameStartPanel extends egret.Sprite {
     this.addChild(this.bottom)
     this.bottom.init()
     this.bottom.addEventListener(Bottom.FRIENDS_RANK, this.friendsRank, this)
+    this.bottom.addEventListener(Bottom.SKIN, this.skinDialog, this)
 
 
     this.btnClose = new egret.Shape;
@@ -167,5 +168,9 @@ class GameStartPanel extends egret.Sprite {
       //主要示例代码结束            
       this.isdisplay = true;
     }
+  }
+
+  private skinDialog() {
+    console.log(1)
   }
 }
