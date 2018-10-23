@@ -19,7 +19,7 @@ egret.runEgret({
 		entryClassName: "Main",
 		orientation: "auto",
 		frameRate: 60,
-		scaleMode: "exactFit",
+		scaleMode: "fixedWidth",
 		contentWidth: 414,
 		contentHeight: 736,
 		showFPS: false,
