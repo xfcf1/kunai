@@ -8,6 +8,8 @@ class GameStartPanel extends egret.Sprite {
   private startPK: Buttons
   private PK: egret.Bitmap
   private bottom: Bottom
+  private skinMask: egret.Shape
+  private skinDialog: SkinDialog
 
   public constructor() {
     super()
@@ -94,13 +96,14 @@ class GameStartPanel extends egret.Sprite {
     this.addChild(this.bottom)
     this.bottom.init()
     this.bottom.addEventListener(Bottom.FRIENDS_RANK, this.friendsRank, this)
-    this.bottom.addEventListener(Bottom.SKIN, this.skinDialog, this)
+    this.bottom.addEventListener(Bottom.SKIN, this.showSkinDialog, this)
 
 
-    this.btnClose = new egret.Shape;
-    this.btnClose.graphics.beginFill(0xff0000, 1)
-    this.btnClose.graphics.drawCircle(egret.MainContext.instance.stage.stageWidth - 50, 80, 20)
-    this.btnClose.graphics.endFill()
+    this.btnClose = new egret.Bitmap(RES.getRes('close_png'));
+    this.btnClose.width = 25
+    this.btnClose.height = 25
+    this.btnClose.x = stage.stageWidth * 4 / 5 + 30
+    this.btnClose.y = 65
     this.btnClose.touchEnabled = true
     this.btnClose.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
       this.friendsRank()
@@ -129,7 +132,7 @@ class GameStartPanel extends egret.Sprite {
   private bitmap: egret.Bitmap
   private isdisplay = false
   private rankingListMask: egret.Shape
-  private btnClose: egret.Shape;
+  private btnClose: egret.Bitmap;
 
   private friendsRank() {
     let platform: any = window.platform;
@@ -170,7 +173,26 @@ class GameStartPanel extends egret.Sprite {
     }
   }
 
-  private skinDialog() {
-    console.log(1)
+  private showSkinDialog() {
+    const { stage } = egret.MainContext.instance
+
+    this.skinMask = new egret.Shape()
+    this.skinMask.graphics.beginFill(0x000000, .2)
+    this.skinMask.graphics.drawRoundRect(0, 0, stage.stageWidth, stage.stageHeight, 10)
+    this.skinMask.graphics.endFill()
+    this.addChild(this.skinMask)
+    
+    this.skinDialog = new SkinDialog()
+    this.addChild(this.skinDialog)
+    
+    this.skinDialog.x = stage.stageWidth / 2 - this.skinDialog._width / 2
+    this.skinDialog.y = stage.stageHeight / 2 - this.skinDialog._height / 2
+    this.skinDialog.addEventListener(SkinDialog.CLOSE_SKIN, this.hideSkinDialog, this)
+  }
+
+  private hideSkinDialog() {
+    this.removeChild(this.skinMask)
+    this.removeChild(this.skinDialog)
+    this.skinDialog.removeEventListener(SkinDialog.CLOSE_SKIN, this.hideSkinDialog, this)
   }
 }

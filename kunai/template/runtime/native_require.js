@@ -33,7 +33,7 @@ egret_native.egretStart = function () {
         //----auto option start----
 		entryClassName: "Main",
 		frameRate: 60,
-		scaleMode: "exactFit",
+		scaleMode: "fixedWidth",
 		contentWidth: 414,
 		contentHeight: 736,
 		showPaintRect: true,

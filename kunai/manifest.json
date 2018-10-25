@@ -15,7 +15,7 @@
 		"bin-debug/components/Buttons.js",
 		"bin-debug/components/Dialog.js",
 		"bin-debug/components/Msg.js",
-		"bin-debug/components/Sklin.js",
+		"bin-debug/components/SkinDialog.js",
 		"bin-debug/components/TimberMask.js",
 		"bin-debug/components/TimberMaskSprite.js",
 		"bin-debug/components/Bottom.js",
