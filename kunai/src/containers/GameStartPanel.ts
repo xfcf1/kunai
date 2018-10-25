@@ -180,6 +180,7 @@ class GameStartPanel extends egret.Sprite {
     this.skinMask.graphics.beginFill(0x000000, .2)
     this.skinMask.graphics.drawRoundRect(0, 0, stage.stageWidth, stage.stageHeight, 10)
     this.skinMask.graphics.endFill()
+    this.skinMask.touchEnabled = true
     this.addChild(this.skinMask)
     
     this.skinDialog = new SkinDialog()

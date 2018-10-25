@@ -68,7 +68,7 @@ class GamePlayingPanel extends egret.Sprite {
 	 * 创建场景界面
 	 * Create scene interface
 	 */
-  protected initGame(): void {
+  protected async initGame() {
 
     const { stage } = egret.MainContext.instance
     const stageW = stage.stageWidth
@@ -80,6 +80,9 @@ class GamePlayingPanel extends egret.Sprite {
     this.bgimg.width = stageW
     this.bgimg.height = stageH
     this.addChild(this.bgimg)
+
+    const skin = await platform.getData('skin') || 1
+    this.skin = parseInt(skin)
 
     if (this.skin === 1) {
       this.bgimg.texture = RES.getRes('4_jpg')

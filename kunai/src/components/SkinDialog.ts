@@ -36,15 +36,25 @@ class SkinDialog extends egret.Sprite {
       title.y = 20
       this.addChild(title)
 
-    const skinList: string[] = ['默认皮肤', '无限月读']
-    skinList.forEach((item: string, index: number) => {
+    const skinList: skinItem[] = [{ text: '默认皮肤', value: 1 }, { text: '无限月读', value: 2 }]
+    skinList.forEach((item: skinItem, index: number) => {
       const text: egret.TextField = new egret.TextField()
       text.textColor = 0xffffff
       text.size = 16
       text.y = 40 * index + 70
       text.x = 20
-      text.text = item
+      text.text = item.text
+      text.touchEnabled = true
+      text.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
+        platform.setData({ key: 'skin', value: item.value })
+        this.dispatchEventWith(SkinDialog.CLOSE_SKIN)
+      }, this)
       this.addChild(text)
     })
   }
+}
+
+declare interface skinItem {
+  text: string
+  value: number
 }

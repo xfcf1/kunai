@@ -12,8 +12,8 @@ declare interface Platform {
   removeUserCloudStorage(ary: string[]): Promise<any>
   share(func?: any): Promise<any>
   setData(data: any, func?: any): Promise<any>
-  getData(data: any, func?: any): Promise<any>
-  removeData(data: any, func?: any): Promise<any>
+  getData(key: any, func?: any): Promise<any>
+  removeData(key: any, func?: any): Promise<any>
   clearData(func?: any): Promise<any>
   openMini(obj: any): Promise<any>
   openDataContext
@@ -34,12 +34,15 @@ class DebugPlatform implements Platform {
     return func && func()
   }
   async setData(data: any, func: any) {
+    window.localStorage.setItem(data.key, data.value)
     return func && func()
   }
-  async getData(data: any, func: any) {
-    return func && func()
+  async getData(key: any, func: any) {
+    const data = window.localStorage.getItem(key)
+    return func ? func(data) : data
   }
-  async removeData(data: any, func: any) {
+  async removeData(key: any, func: any) {
+    window.localStorage.removeItem(key)
     return func && func()
   }
   async clearData(func: any) {
