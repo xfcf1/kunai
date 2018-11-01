@@ -58,9 +58,7 @@ class Main extends eui.UILayer {
   private async runGame() {
     await this.loadResource()
     this.createGameScene();
-    // const data = await platform.login()
-    // console.log(111, data)
-    // const userInfo = await platform.getUserInfo()
+    // 加载微信开放域资源
     platform.openDataContext.postMessage({command:'loadRes'})
   }
 
@@ -118,7 +116,6 @@ class Main extends eui.UILayer {
 	}
 
 	public start() {
-		// const { gameStartPanel, gamePlaying } = this
 		this.addChild(this.gameStartPanel)
     this.gameStartPanel.start()
 		this.gameStartPanel.addEventListener(GameStartPanel.GAME_START_1, this.gamePlaying1, this)
@@ -126,7 +123,6 @@ class Main extends eui.UILayer {
 	}
 
 	private gamePlaying1() {
-		// const { gameStartPanel, gamePlayingPanel, gamePlaying, gameEnd } = this
 		this.gameStartPanel.end()
 		this.removeChild(this.gameStartPanel)
 		this.gameStartPanel.removeEventListener(GameStartPanel.GAME_START_1, this.gamePlaying1, this)
@@ -138,7 +134,6 @@ class Main extends eui.UILayer {
 	}
 
 	private gamePlaying2() {
-		// const { gameStartPanel, gamePlayingPanel, gamePlaying, gameEnd } = this
 		this.gameStartPanel.end()
 		this.removeChild(this.gameStartPanel)
 		this.gameStartPanel.removeEventListener(GameStartPanel.GAME_START_1, this.gamePlaying1, this)
@@ -158,13 +153,7 @@ class Main extends eui.UILayer {
 	}
 
 	private gameRestart() {
-		// const { gameStartPanel, gameEndPanel, gamePlaying, gameStart } = this
-		// this.gameEndPanel.end()
-		// this.removeChild(this.gameEndPanel)
-		// this.gameEndPanel.removeEventListener(GameEndPanel.GAME_RESTART, this.gameStart, this)
-		// this.addChild(this.gameStartPanel)
-    // this.gameStartPanel.start()
-		// this.gameStartPanel.addEventListener(GameStartPanel.GAME_START, this.gamePlaying, this)
+    console.log('game restart')
 	}
 }
 

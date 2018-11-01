@@ -1,3 +1,6 @@
+/**
+ * 皮肤切换窗口
+ */
 class SkinDialog extends egret.Sprite {
   constructor() {
     super()

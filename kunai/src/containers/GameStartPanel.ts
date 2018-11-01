@@ -1,3 +1,6 @@
+/**
+ * 游戏开始界面
+ */
 class GameStartPanel extends egret.Sprite {
   public static GAME_START_1: string = 'gamestart1'
   public static GAME_START_2: string = 'gamestart2'

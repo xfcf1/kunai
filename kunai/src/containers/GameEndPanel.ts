@@ -1,3 +1,6 @@
+/**
+ * 游戏结束画面，未用到
+ */
 class GameEndPanel extends egret.Sprite {
   public static GAME_RESTART: string = 'gamerestart'
   private bg: egret.Shape

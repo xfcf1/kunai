@@ -1,3 +1,6 @@
+/**
+ * 游戏结束弹窗
+ */
 class Dialog extends egret.Sprite {
   constructor() {
     super()

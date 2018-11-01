@@ -1,3 +1,6 @@
+/**
+ * 不同的木桩弧形遮罩
+ */
 class TimberMaskSprite extends egret.Sprite {
   constructor() {
     super()

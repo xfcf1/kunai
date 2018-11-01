@@ -1,3 +1,6 @@
+/**
+ * 用弧形遮罩制作不同的木桩形状，用于制作结束动画
+ */
 class TimberMask extends egret.Sprite {
   constructor() {
     super()

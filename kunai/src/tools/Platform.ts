@@ -48,7 +48,10 @@ class DebugPlatform implements Platform {
   async clearData(func: any) {
     return func && func()
   }
-  openDataContext
+  openDataContext = {
+    postMessage: (): void => {},
+    createDisplayObject: (): void => {}
+  }
   async openMini(obj: any) {}
 }
 

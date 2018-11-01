@@ -1,3 +1,6 @@
+/**
+ * 游戏进行中的界面
+ */
 class GamePlayingPanel extends egret.Sprite {
   public static GAME_END: string = 'gameend'
   public static GAME_RESTART: string = 'gamerestart'
@@ -9,25 +12,30 @@ class GamePlayingPanel extends egret.Sprite {
   private timber: egret.Bitmap
   private kunai: egret.Bitmap
   private timberInterval: number
-  protected rotations: number = 3
+  // 如果是负数则逆时针转动，数值越大速度越快
+  private rotations: number = 3
   private isShooting: boolean = false
   private insertRotate: itemObj[] = []
   private insertRotateNoAnimate: egret.Bitmap[] = []
   protected kunaiW: number = 21
   protected kunaiH: number = 100
-  protected rate: number = 35
-  protected rateOffset: number = 0
+  // time interval的间隔，数值越小转的越快
+  private rate: number = 35
+  // 改变现有旋转速度
+  private rateOffset: number = 0
   private dialog: Dialog
   private s1: egret.Bitmap
   private s2: egret.Bitmap
   private layerNum: number
   private scores: egret.TextField
   private timberMask: TimberMask
+  private kunaiNumTips: egret.TextField
 
   // 关数限定
+  // 默认需要射中的苦无数量
   private kunaiNum: number = 9
+  // 默认第1关
   private level: number = 1
-  private kunaiNumTips: egret.TextField
 
   public constructor() {
     super()
@@ -129,7 +137,6 @@ class GamePlayingPanel extends egret.Sprite {
 	 * Description file loading is successful, start to play the animation
 	 */
   private startAnimation(): void {
-    // this.showDialog()
     if (this.timberInterval) {
       clearInterval(this.timberInterval)
     }
@@ -163,8 +170,7 @@ class GamePlayingPanel extends egret.Sprite {
   }
 
 	/**
-	 * 点击按钮
-	 * Click the button
+	 * 射击动作
 	 */
   private shoot(e: egret.TouchEvent) {
     if (this.isShooting || this.kunaiNum <= 0) return
@@ -205,18 +211,6 @@ class GamePlayingPanel extends egret.Sprite {
       .call(func, this)
   }
 
-  // 创建游戏点击区域
-
-  private createClickable() {
-    const { stage } = egret.MainContext.instance
-    const rect = new egret.Shape()
-    rect.graphics.beginFill(0x000000, 0)
-    rect.graphics.drawRect(0, stage.stageHeight - 200, stage.stageWidth, 300)
-    rect.graphics.endFill()
-    this.addChild(rect)
-    rect.touchEnabled = true
-    rect.addEventListener(egret.TouchEvent.TOUCH_TAP, this.shoot, this)
-  }
 
   private createKunai() {
     const { stage } = egret.MainContext.instance
@@ -231,6 +225,18 @@ class GamePlayingPanel extends egret.Sprite {
 
     this.createRandomKunai()
     this.createClickable()
+  }
+
+  // 创建游戏点击区域
+  private createClickable() {
+    const { stage } = egret.MainContext.instance
+    const rect = new egret.Shape()
+    rect.graphics.beginFill(0x000000, 0)
+    rect.graphics.drawRect(0, stage.stageHeight - 200, stage.stageWidth, 300)
+    rect.graphics.endFill()
+    this.addChild(rect)
+    rect.touchEnabled = true
+    rect.addEventListener(egret.TouchEvent.TOUCH_TAP, this.shoot, this)
   }
 
   private resetKunai() {
@@ -276,6 +282,9 @@ class GamePlayingPanel extends egret.Sprite {
 
   }
 
+  /**
+   * 替换原有的动画苦无为静态，方便后续做掉落动画
+   */
   private createRotateKunaiNoAnimate(rotate: number) {
     // 生成无动画的苦无
     const { stage } = egret.MainContext.instance 
@@ -308,6 +317,7 @@ class GamePlayingPanel extends egret.Sprite {
     })
   }
 
+  // 消除一定数量的苦无
   private removeRotateKunai(num: number = 3) {
     for (let i = 0; i < num; i++) {
       let item = this.insertRotate.splice(0, 1)[0]
@@ -319,6 +329,7 @@ class GamePlayingPanel extends egret.Sprite {
     }
   }
 
+  // 即将到达木桩的苦无与现存于木桩的苦无进行坐标比较
   private calcCollision = (rotate: number): boolean => {
     const { insertRotate } = this
     return insertRotate.some((item: itemObj): boolean => {
@@ -326,6 +337,7 @@ class GamePlayingPanel extends egret.Sprite {
     })
   }
 
+  // 重复苦无的动画，游戏失败等等
   private flickKunai() {
     const { stage } = egret.MainContext.instance
     const func = (): void => {
@@ -435,9 +447,6 @@ class GamePlayingPanel extends egret.Sprite {
       }
       item.kunai.parent.removeChild(item.kunai)
       ary.push(item.id)
-      // item.kunai.x = item.kunai.x + Tools.generateRandom(10, 30)
-      // item.kunai.y = item.kunai.y + Tools.generateRandom(10, 30)
-      // egret.Tween.get(item.kunai).to({ y: this.stage.stageHeight }, 1000)
     })
     this.insertRotate = []
     ary.forEach((rotate: number) => {
@@ -454,8 +463,11 @@ class GamePlayingPanel extends egret.Sprite {
     }, 1100)
   }
 
+  // 下一关
   private goNext() {
+    // 关数加1
     this.level += 1
+    // 根据关卡加强的难度减少需要射出的苦无
     this.kunaiNum = 9 + Math.floor(this.level / 10 - 1)
     if(this.kunaiNum <=0 ) {
       this.kunaiNum = 1
@@ -467,7 +479,9 @@ class GamePlayingPanel extends egret.Sprite {
     this.resetKunai()
   }
 
-  // 随机生成的苦无
+  /**
+   * 每过一关改变关卡过关方式，并重新生成已在木桩上的苦无
+   */
   private createRandomKunai() {
     if (this.level !== 1) {
       if (this.mode === 1) {
@@ -493,6 +507,7 @@ class GamePlayingPanel extends egret.Sprite {
     this.startAnimation()
   }
 
+  // 游戏结束提示框
   private async showDialog() {
     const { stage } = egret.MainContext.instance
     this.dialog = new Dialog()
@@ -535,6 +550,7 @@ class GamePlayingPanel extends egret.Sprite {
     }, this)
   }
 
+  // 重置游戏设置
   private resetGame() {
     this.closeDialog()
     this.level = 1
@@ -547,6 +563,7 @@ class GamePlayingPanel extends egret.Sprite {
     this.updateScores(0)
   }
 
+  // 清除现有所有的苦无
   private cleanBitmap() {
     this.insertRotate.forEach((item: itemObj) => {
       item.kunai.parent.removeChild(item.kunai)
